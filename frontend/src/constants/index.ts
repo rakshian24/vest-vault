@@ -32,5 +32,10 @@ export const colors = {
   tertiary: "#57697a",
   lightBrown: "#87746e",
   brown: "#b78063",
-  darkBlue:"#264e86"
+  darkBlue: "#264e86",
+
+  // App pallete
+  blue1: "#6366f1",
+  bg1: "#1C283A",
+  primaryBtnColor: "#4E46E5",
 };

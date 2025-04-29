@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import { ROUTES, screenSize } from "./constants";
 import { useAuth } from "./context/authContext";
@@ -54,13 +54,6 @@ function App() {
             </Routes>
           </Stack>
         )}
-        <Routes>
-          <Route path="/" element={<Navigate to={REGISTER} replace />} />
-          <Route
-            path="*"
-            element={<Navigate to={isLoggedIn ? DASHBOARD : LOGIN} replace />}
-          />
-        </Routes>
       </Stack>
       {isTablet && isLoggedIn && <Footer userInfo={user} />}
     </Stack>

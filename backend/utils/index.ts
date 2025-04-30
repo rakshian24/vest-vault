@@ -46,7 +46,7 @@ export const calculateVestingSchedule = (
   }[] = [];
 
   // First 25% at 1 year mark
-  const firstVestDate = dayjs(grantDate).add(1, "year").endOf("quarter");
+  const firstVestDate = dayjs(grantDate).add(1, "year");
   const isFirstVested =
     firstVestDate.isBefore(today) || firstVestDate.isSame(today, "day");
 
@@ -89,7 +89,7 @@ export const calculateVestingSchedule = (
   let current = firstVestDate;
 
   for (let i = 0; i < quarters; i++) {
-    current = current.add(3, "month").endOf("quarter");
+    current = current.add(3, "month");
     const qty = mixedChunks[i];
     const isVested = current.isBefore(today) || current.isSame(today, "day");
 

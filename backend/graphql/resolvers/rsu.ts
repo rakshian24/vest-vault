@@ -29,17 +29,15 @@ const resolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
-      const { totalUnits, vestingSchedule } = calculateVestingSchedule(
-        grantDate,
-        grantAmount,
-        stockPrice
-      );
+      const { totalUnits, vestingSchedule, vestedUnits } =
+        calculateVestingSchedule(grantDate, grantAmount, stockPrice);
 
       const newRsu = new Rsu({
         grantDate: dayjs(grantDate).utc(),
         grantAmount,
         stockPrice,
         totalUnits,
+        vestedUnits,
         vestingSchedule,
         createdBy: userId,
       });

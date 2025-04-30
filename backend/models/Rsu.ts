@@ -11,6 +11,7 @@ export interface IRsu extends Document {
   grantAmount: number;
   stockPrice: number;
   totalUnits: number;
+  vestedUnits: number;
   vestingSchedule: IVestingEvent[];
   createdBy: Types.ObjectId;
 }
@@ -49,6 +50,10 @@ const RsuSchema = new Schema(
       min: [0, "Stock price must be a positive number"],
     },
     totalUnits: {
+      type: Number,
+      required: true,
+    },
+    vestedUnits: {
       type: Number,
       required: true,
     },

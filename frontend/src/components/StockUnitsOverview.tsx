@@ -15,6 +15,7 @@ type StockUnitsOverviewProps = {
 type StockUnitItemProps = {
   label: string;
   value: number;
+  isCurrencyType?: boolean;
 };
 
 type StockUnitFooterProps = {
@@ -23,17 +24,26 @@ type StockUnitFooterProps = {
   value: string;
 };
 
+let isCurrencyDollar = false;
+const currencySymbol = isCurrencyDollar ? "$" : "₹";
+
 const formatNumber = (num: number) =>
   new Intl.NumberFormat("en-IN").format(num);
 
-const StockUnitItem = ({ label, value }: StockUnitItemProps) => (
+const StockUnitItem = ({
+  label,
+  value,
+  isCurrencyType = false,
+}: StockUnitItemProps) => (
   <Grid item xs={12} sm={6}>
     <Box p={2} bgcolor={colors.lightGrey} borderRadius={2}>
       <Typography fontSize={14} color="text.secondary">
         {label}
       </Typography>
       <Typography fontWeight={600} fontSize={18}>
-        {formatNumber(value)}
+        {isCurrencyType
+          ? `${currencySymbol} ${formatNumber(value)}`
+          : formatNumber(value)}
       </Typography>
     </Box>
   </Grid>
@@ -70,8 +80,16 @@ const StockUnitsOverview = ({
       <Grid container spacing={2} mb={2}>
         <StockUnitItem label="Total units" value={totalUnits} />
         <StockUnitItem label="Vested Units" value={vestedUnits} />
-        <StockUnitItem label="Total Grants Value" value={totalGrantsValue} />
-        <StockUnitItem label="Vested Value" value={vestedInrValue} />
+        <StockUnitItem
+          label="Total Grants Value"
+          value={totalGrantsValue}
+          isCurrencyType
+        />
+        <StockUnitItem
+          label="Vested Value"
+          value={vestedInrValue}
+          isCurrencyType
+        />
       </Grid>
 
       <Stack

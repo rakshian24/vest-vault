@@ -2,7 +2,6 @@ import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
   scalar DateTime
-  scalar IntOrString
 
   type User {
     _id: ID!
@@ -13,6 +12,12 @@ export const typeDefs = gql`
   type AuthResponse {
     user: User
     token: String
+  }
+
+  type IVestingEvent {
+    vestDate: DateTime!
+    grantedQty: Int!
+    vestedQty: Int!
   }
 
   input RegisterInput {
@@ -29,9 +34,11 @@ export const typeDefs = gql`
 
   type Rsu {
     _id: ID!
-    grantDate: String!
+    grantDate: DateTime!
     grantAmount: Float!
     stockPrice: Float!
+    totalUnits: Int!
+    vestingSchedule: [IVestingEvent]!
     createdBy: User!
     createdAt: DateTime
   }

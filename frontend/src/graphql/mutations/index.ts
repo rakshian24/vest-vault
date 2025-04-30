@@ -33,6 +33,12 @@ export const CREATE_RSU = gql`
       grantDate
       grantAmount
       stockPrice
+      totalUnits
+      vestingSchedule {
+        vestDate
+        grantedQty
+        vestedQty
+      }
     }
   }
 `;

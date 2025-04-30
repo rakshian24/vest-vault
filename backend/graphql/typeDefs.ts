@@ -15,6 +15,7 @@ export const typeDefs = gql`
   }
 
   type IVestingEvent {
+    _id: ID!
     vestDate: DateTime!
     grantedQty: Int!
     vestedQty: Int!

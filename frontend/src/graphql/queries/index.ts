@@ -20,6 +20,7 @@ export const GET_MY_RSUS = gql`
       totalUnits
       vestedUnits
       vestingSchedule {
+        _id
         vestDate
         grantedQty
         vestedQty

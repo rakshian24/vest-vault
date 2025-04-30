@@ -25,7 +25,7 @@ function App() {
         height: "100vh",
         minHeight: "100vh",
         margin: 0,
-        bgcolor: colors.pageBg,
+        bgcolor: colors.darkGrey1,
       }}
     >
       {!isTablet && isLoggedIn && <Header />}

@@ -32,6 +32,7 @@ export const calculateVestingSchedule = (
   stockPrice: number
 ): {
   totalUnits: number;
+  vestedUnits: number;
   vestingSchedule: { vestDate: Date; grantedQty: number; vestedQty: number }[];
 } => {
   const today = dayjs();
@@ -47,6 +48,8 @@ export const calculateVestingSchedule = (
     vestedQty: number;
   }[] = [];
 
+  let vestedUnits = 0;
+
   // First 25% at 1 year mark
   const firstVestDate = dayjs(grantDate).add(1, "year");
   const isFirstVested =
@@ -58,21 +61,19 @@ export const calculateVestingSchedule = (
     vestedQty: isFirstVested ? firstQty : 0,
   });
 
+  if (isFirstVested) vestedUnits += firstQty;
+
   // Distribute remaining over 12 quarters using 5 & 6 pattern
   const quarters = 12;
   const lowQty = Math.floor(remainingQty / quarters);
   const highQty = lowQty + 1;
-
   const numHigh = remainingQty % quarters;
 
-  // Create mixed list of 5s and 6s
+  // Create a balanced mix of 5s and 6s
   const grantChunks: number[] = [];
-
   for (let i = 0; i < numHigh; i++) grantChunks.push(highQty); // 6s
   for (let i = 0; i < quarters - numHigh; i++) grantChunks.push(lowQty); // 5s
 
-  // Mix up the chunks to avoid grouping all 6s or all 5s
-  // Alternate 5 and 6 as much as possible (simple round-robin shuffle)
   const mixedChunks: number[] = [];
   const sixes = grantChunks.filter((q) => q === highQty);
   const fives = grantChunks.filter((q) => q === lowQty);
@@ -87,13 +88,15 @@ export const calculateVestingSchedule = (
     }
   }
 
-  // Generate vesting events
+  // Generate remaining vesting events
   let current = firstVestDate;
 
   for (let i = 0; i < quarters; i++) {
     current = dayjs(current).add(3, "month").utc().endOf("quarter");
     const qty = mixedChunks[i];
     const isVested = current.isBefore(today) || current.isSame(today, "day");
+
+    if (isVested) vestedUnits += qty;
 
     vestingSchedule.push({
       vestDate: current.toDate(),
@@ -104,6 +107,7 @@ export const calculateVestingSchedule = (
 
   return {
     totalUnits,
+    vestedUnits,
     vestingSchedule,
   };
 };

@@ -18,6 +18,7 @@ export const GET_MY_RSUS = gql`
       grantAmount
       stockPrice
       totalUnits
+      vestedUnits
       vestingSchedule {
         vestDate
         grantedQty

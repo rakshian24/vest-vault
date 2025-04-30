@@ -13,6 +13,14 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
 
   console.log(data);
 
+  const totalUnits = data?.myRsus?.reduce((sum: any, rsu: any) => {
+    return sum + rsu.totalUnits;
+  }, 0);
+
+  const vestedUnits = data?.myRsus?.reduce((sum: any, rsu: any) => {
+    return sum + rsu.vestedUnits;
+  }, 0);
+
   return (
     <Stack gap={isTablet ? 3 : 4}>
       <Typography variant={isTablet ? "h5" : "h4"} mb={2}>
@@ -24,9 +32,9 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
       ) : (
         <Stack gap={3}>
           <StockUnitsOverview
-            totalUnits={55000}
-            vestedUnits={23}
-            totalGrantsValue={186000}
+            totalUnits={totalUnits}
+            vestedUnits={vestedUnits}
+            totalGrantsValue={totalUnits * 600}
             vestedInrValue={18707204}
             usdToInr={83}
             stockPrice={600}

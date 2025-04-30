@@ -38,6 +38,7 @@ export const typeDefs = gql`
     grantAmount: Float!
     stockPrice: Float!
     totalUnits: Int!
+    vestedUnits: Int!
     vestingSchedule: [IVestingEvent]!
     createdBy: User!
     createdAt: DateTime

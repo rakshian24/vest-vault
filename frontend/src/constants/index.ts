@@ -40,6 +40,7 @@ export const colors = {
   goldenYellow: "#FACC15",
   goldenYellowHover: "#EAB308",
   goldenYellowDisabled: "#FDE68A",
+  pageBg: "#F3F4F6"
 };
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";

@@ -1,5 +1,5 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { ISO_DATE_FORMAT, screenSize } from "../../../constants";
+import { screenSize } from "../../../constants";
 import {
   Box,
   Dialog,

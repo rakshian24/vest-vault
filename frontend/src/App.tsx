@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
-import { ROUTES, screenSize } from "./constants";
+import { colors, ROUTES, screenSize } from "./constants";
 import { useAuth } from "./context/authContext";
 import { Stack, useMediaQuery } from "@mui/material";
 import Home from "./pages/home";
@@ -20,7 +20,14 @@ function App() {
   const { REGISTER, LOGIN, DASHBOARD, PROFILE } = ROUTES;
 
   return (
-    <Stack sx={{ height: "100vh", minHeight: "100vh", margin: 0 }}>
+    <Stack
+      sx={{
+        height: "100vh",
+        minHeight: "100vh",
+        margin: 0,
+        bgcolor: colors.pageBg,
+      }}
+    >
       {!isTablet && isLoggedIn && <Header />}
       <Stack
         sx={{

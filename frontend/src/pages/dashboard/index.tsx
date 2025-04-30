@@ -4,6 +4,7 @@ import { User } from "../../context/authContext";
 import CommonSkeleton from "../../components/CommonSkeleton";
 import { useQuery } from "@apollo/client";
 import { GET_MY_RSUS } from "../../graphql/queries";
+import StockUnitsOverview from "../../components/StockUnitsOverview";
 
 const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
@@ -18,11 +19,14 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
       {isRsusLoading ? (
         <CommonSkeleton height={350} sx={{ borderRadius: isTablet ? 3 : 6 }} />
       ) : (
-        <Stack gap={2}>
-          {data?.myRsus?.map((rsu: any) => {
-            return <Typography>Grant Date: {rsu.grantDate}</Typography>;
-          })}
-        </Stack>
+        <StockUnitsOverview
+          totalUnits={55000}
+          vestedUnits={23}
+          totalGrantsValue={186000}
+          vestedInrValue={18707204}
+          usdToInr={83}
+          stockPrice={600}
+        />
       )}
     </Stack>
   );

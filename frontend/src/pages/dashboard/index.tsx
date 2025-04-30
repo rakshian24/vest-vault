@@ -11,8 +11,6 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
   const { data, loading: isRsusLoading } = useQuery(GET_MY_RSUS);
 
-  console.log(data);
-
   const totalUnits = data?.myRsus?.reduce((sum: any, rsu: any) => {
     return sum + rsu.totalUnits;
   }, 0);

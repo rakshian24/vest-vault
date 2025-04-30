@@ -36,6 +36,7 @@ export const CREATE_RSU = gql`
       totalUnits
       vestedUnits
       vestingSchedule {
+        _id
         vestDate
         grantedQty
         vestedQty

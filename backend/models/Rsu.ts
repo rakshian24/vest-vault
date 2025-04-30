@@ -18,20 +18,25 @@ export interface IRsu extends Document {
 
 const Schema = mongoose.Schema;
 
-const VestingEventSchema = new Schema<IVestingEvent>({
-  vestDate: {
-    type: Date,
-    required: true,
+const VestingEventSchema = new Schema<IVestingEvent>(
+  {
+    vestDate: {
+      type: Date,
+      required: true,
+    },
+    grantedQty: {
+      type: Number,
+      required: true,
+    },
+    vestedQty: {
+      type: Number,
+      required: true,
+    },
   },
-  grantedQty: {
-    type: Number,
-    required: true,
-  },
-  vestedQty: {
-    type: Number,
-    required: true,
-  },
-});
+  {
+    _id: true,
+  }
+);
 
 const RsuSchema = new Schema(
   {

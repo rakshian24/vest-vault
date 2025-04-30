@@ -12,9 +12,11 @@ import dayjs from "dayjs";
 import { colors, ISO_DATE_FORMAT } from "../constants";
 
 interface VestingEvent {
+  _id: string;
   vestDate: string;
   grantedQty: number;
   vestedQty: number;
+  __typename: string;
 }
 
 interface IRsuData {
@@ -52,19 +54,29 @@ const SecondaryHeader = ({ label }: SecondaryHeaderProps) => (
 );
 
 const VestingSchedule = ({ rsuData }: VestingScheduleProps) => {
-  const rsu = rsuData[0];
-  if (!rsu) return null;
+  if (rsuData.length <= 0) return null;
 
   const FIXED_STOCK_PRICE = 600;
 
-  const groupedByYear = rsu.vestingSchedule.reduce(
-    (acc: Record<string, VestingEvent[]>, event) => {
-      const year = String(dayjs(event.vestDate).year());
-      (acc[year] ??= []).push(event);
-      return acc;
-    },
-    {}
-  );
+  const groupedRsusByYear: Record<string, any[]> = {};
+
+  rsuData.forEach((rsu) => {
+    rsu.vestingSchedule.forEach((event) => {
+      const year = new Date(event.vestDate).getFullYear();
+
+      if (!groupedRsusByYear[year]) {
+        groupedRsusByYear[year] = [];
+      }
+
+      groupedRsusByYear[year].push({
+        _id: event._id,
+        vestDate: event.vestDate,
+        grantedQty: event.grantedQty,
+        vestedQty: event.vestedQty,
+        __typename: event.__typename,
+      });
+    });
+  });
 
   let isCurrencyDollar = false;
   const currencySymbol = isCurrencyDollar ? "$" : "₹";
@@ -102,7 +114,7 @@ const VestingSchedule = ({ rsuData }: VestingScheduleProps) => {
         <PrimaryHeader label="Value" />
       </Box>
 
-      {Object.entries(groupedByYear).map(([year, schedule]) => {
+      {Object.entries(groupedRsusByYear).map(([year, schedule]) => {
         const yearUnits = schedule.reduce((acc, e) => acc + e.grantedQty, 0);
         const usdValue = yearUnits * FIXED_STOCK_PRICE;
 
@@ -182,7 +194,7 @@ const VestingSchedule = ({ rsuData }: VestingScheduleProps) => {
 
               {schedule.map((item, index) => (
                 <Stack
-                  key={item.vestDate}
+                  key={item._id}
                   direction="row"
                   spacing={2}
                   p={2}

@@ -2,10 +2,10 @@ import { ApolloError } from "apollo-server-errors";
 import getLoggedInUserId from "../../middleware/getLoggedInUserId";
 import Rsu, { IRsu } from "../../models/Rsu";
 import { Types } from "mongoose";
-import dayjs from "dayjs";
+import { calculateVestingSchedule } from "../../utils";
 
 interface RsuInput {
-  grantDate: String;
+  grantDate: string;
   grantAmount: number;
   stockPrice: number;
 }
@@ -26,16 +26,24 @@ const resolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
+      const { totalUnits, vestingSchedule } = calculateVestingSchedule(
+        grantDate,
+        grantAmount,
+        stockPrice
+      );
+
       const newRsu = new Rsu({
         grantDate,
         grantAmount,
         stockPrice,
+        totalUnits,
+        vestingSchedule,
         createdBy: userId,
       });
 
       const res = (await newRsu.save()).toObject() as IRsu;
 
-      return { ...res, grantDate: dayjs(res.grantDate).format("DD/MMM/YYYY") };
+      return res;
     },
   },
   Query: {
@@ -49,13 +57,7 @@ const resolvers = {
 
       const myRsus = await Rsu.find({ createdBy: userId });
 
-      const rsusAsObjects = myRsus.map((rsu) => {
-        const obj = rsu.toObject() as IRsu;
-        return {
-          ...obj,
-          grantDate: dayjs(obj.grantDate).format("DD/MMM/YYYY"),
-        };
-      });
+      const rsusAsObjects = myRsus.map((todo) => todo.toObject()) as IRsu[];
 
       return rsusAsObjects;
     },

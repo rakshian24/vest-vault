@@ -78,7 +78,7 @@ const StockUnitsOverview = ({
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        bgcolor={colors.black}
+        bgcolor={colors.charcoalNavy}
         p={2}
         borderRadius={2}
       >

@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
 import quarterOfYear from "dayjs/plugin/quarterOfYear";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
 export const generateToken = async (user: any): Promise<string> => {
@@ -89,7 +91,7 @@ export const calculateVestingSchedule = (
   let current = firstVestDate;
 
   for (let i = 0; i < quarters; i++) {
-    current = current.add(3, "month");
+    current = dayjs(current).add(3, "month").utc().endOf("quarter");
     const qty = mixedChunks[i];
     const isVested = current.isBefore(today) || current.isSame(today, "day");
 

@@ -3,6 +3,9 @@ import getLoggedInUserId from "../../middleware/getLoggedInUserId";
 import Rsu, { IRsu } from "../../models/Rsu";
 import { Types } from "mongoose";
 import { calculateVestingSchedule } from "../../utils";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 interface RsuInput {
   grantDate: string;
@@ -33,7 +36,7 @@ const resolvers = {
       );
 
       const newRsu = new Rsu({
-        grantDate,
+        grantDate: dayjs(grantDate).utc(),
         grantAmount,
         stockPrice,
         totalUnits,

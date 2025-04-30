@@ -35,7 +35,11 @@ export const colors = {
   darkBlue: "#264e86",
 
   // App pallete
-  blue1: "#6366f1",
-  bg1: "#1C283A",
-  primaryBtnColor: "#4E46E5",
+  mediumSlateIndigo: "#6366f1",
+  charcoalNavy: "#1C283A",
+  goldenYellow: "#FACC15",
+  goldenYellowHover: "#EAB308",
+  goldenYellowDisabled: "#FDE68A",
 };
+
+export const ISO_DATE_FORMAT = "DD-MMM-YYYY";

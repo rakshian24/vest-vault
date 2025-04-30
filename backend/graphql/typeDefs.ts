@@ -27,30 +27,31 @@ export const typeDefs = gql`
     password: String!
   }
 
-  type Todo {
+  type Rsu {
     _id: ID!
-    title: String!
-    description: String!
-    isCompleted: Boolean!
+    grantDate: String!
+    grantAmount: Float!
+    stockPrice: Float!
     createdBy: User!
     createdAt: DateTime
   }
 
-  input TodoInput {
-    title: String!
-    description: String!
+  input RsuInput {
+    grantDate: String!
+    grantAmount: String!
+    stockPrice: String!
   }
 
   type Query {
     me: User
-    myTodos: [Todo]
-    getAllTodos: [Todo]
+    myRsus: [Rsu]
+    getAllTodos: [Rsu]
     user(id: ID!): User
   }
 
   type Mutation {
     registerUser(registerInput: RegisterInput): AuthResponse
     loginUser(loginInput: LoginInput): AuthResponse
-    createTodo(todoInput: TodoInput): Todo
+    createRsu(rsuInput: RsuInput): Rsu
   }
 `;

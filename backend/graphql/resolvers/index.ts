@@ -1,13 +1,13 @@
 import userResolvers from "./users";
-import todoResolvers from "./todo";
+import rsuResolvers from "./rsu";
 
 export default {
   Query: {
     ...userResolvers.Query,
-    ...todoResolvers.Query,
+    ...rsuResolvers.Query,
   },
   Mutation: {
     ...userResolvers.Mutation,
-    ...todoResolvers.Mutation,
+    ...rsuResolvers.Mutation,
   },
 };

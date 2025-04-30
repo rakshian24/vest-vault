@@ -44,14 +44,14 @@ const Button = ({
           ? "10px 24px 10px 16px"
           : "10px 24px",
         boxShadow: "none",
-        bgcolor: colors.brown,
-        color: colors.white,
+        bgcolor: colors.goldenYellow,
+        color: colors.black,
         "&:hover": {
-          bgcolor: colors.lightBrown,
+          bgcolor: colors.goldenYellowHover,
           boxShadow: "none",
         },
         "&:disabled": {
-          bgcolor: colors.lightGrey,
+          bgcolor: colors.goldenYellowDisabled,
           color: isLoading ? colors.charcoal : colors.contentSecondary,
           opacity: 0.6,
         },

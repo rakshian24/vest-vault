@@ -1,11 +1,11 @@
 export interface ICreateTodoFormValueTypes {
-  title: string;
-  description: string;
-  isCompleted: boolean;
+  grantDate: string;
+  grantAmount: number;
+  stockPrice: number;
 }
 
 export const InitCreateTodoFormValues: ICreateTodoFormValueTypes = {
-  title: "",
-  description: "",
-  isCompleted: false,
+  grantDate: "",
+  grantAmount: 0,
+  stockPrice: 0,
 };

@@ -26,13 +26,13 @@ export const LOGIN_MUTATION = gql`
   }
 `;
 
-export const CREATE_TODO = gql`
-  mutation Mutation($todoInput: TodoInput) {
-    createTodo(todoInput: $todoInput) {
+export const CREATE_RSU = gql`
+  mutation Mutation($rsuInput: RsuInput) {
+    createRsu(rsuInput: $rsuInput) {
       _id
-      title
-      description
-      isCompleted
+      grantDate
+      grantAmount
+      stockPrice
     }
   }
 `;

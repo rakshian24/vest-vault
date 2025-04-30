@@ -10,13 +10,13 @@ export const GET_ME = gql`
   }
 `;
 
-export const GET_MY_TODOS = gql`
+export const GET_MY_RSUS = gql`
   query {
-    myTodos {
+    myRsus {
       _id
-      title
-      description
-      isCompleted
+      grantDate
+      grantAmount
+      stockPrice
       createdAt
     }
   }

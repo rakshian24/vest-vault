@@ -8,11 +8,11 @@ sharedSignupTestSetup();
 
 let testData;
 
-test.describe("Employer: Create Todo", () => {
-  test("Create Todo", async ({ page }, testInfo) => {
+test.describe("Employer: Create Rsu", () => {
+  test("Create Rsu", async ({ page }, testInfo) => {
     console.log(`Running ${testInfo.title}`);
 
-    console.log(`Creating Todo ${testInfo.title}`);
+    console.log(`Creating Rsu ${testInfo.title}`);
 
     for (let i = 0; i < 200; i++) {
       testData = generateTestData();

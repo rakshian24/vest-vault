@@ -4,6 +4,9 @@ import Rsu, { IRsu } from "../../models/Rsu";
 import { Types } from "mongoose";
 import { calculateVestingSchedule } from "../../utils";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 interface RsuInput {
   grantDate: string;
@@ -27,15 +30,13 @@ const resolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
-      const parsedGrantDate = dayjs(grantDate)
-        .startOf("day")
-        .format("YYYY-MM-DD");
+      const parsedGrantDate = dayjs.utc(grantDate, "YYYY-MM-DD");
 
       const { totalUnits, vestingSchedule, vestedUnits } =
         calculateVestingSchedule(parsedGrantDate, grantAmount, stockPrice);
 
       const newRsu = new Rsu({
-        grantDate: dayjs(parsedGrantDate).toDate(),
+        grantDate: parsedGrantDate.toDate(),
         grantAmount,
         stockPrice,
         totalUnits,

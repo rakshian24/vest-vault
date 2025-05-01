@@ -58,7 +58,7 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
         variables: {
           rsuInput: {
             ...formValues,
-            grantDate: dayjs(formValues.grantDate).toDate(),
+            grantDate: dayjs(formValues.grantDate).format("YYYY-MM-DD"),
           },
         },
       });

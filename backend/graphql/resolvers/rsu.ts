@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 import { calculateVestingSchedule } from "../../utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { isEnabled } from "../../utils/flag";
 
 dayjs.extend(utc);
 
@@ -31,6 +32,10 @@ const resolvers = {
       }
 
       const parsedGrantDate = dayjs.utc(grantDate, "YYYY-MM-DD");
+
+      /* A sample code to test if the vercel feature flag is working - should be removed later */
+      const isNewDashboardFFValue = await isEnabled("enableNewDashboard");
+      console.log("isNewDashboardFFValue = ", isNewDashboardFFValue);
 
       const { totalUnits, vestingSchedule, vestedUnits } =
         calculateVestingSchedule(parsedGrantDate, grantAmount, stockPrice);

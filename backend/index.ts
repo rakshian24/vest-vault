@@ -1,8 +1,8 @@
 import express from "express";
-import { createYoga, createSchema } from "graphql-yoga";
-import path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
+import { createYoga, createSchema } from "graphql-yoga";
+import path from "path";
 import { connectDB } from "./db";
 import { typeDefs } from "./graphql/typeDefs";
 import resolvers from "./graphql/resolvers";

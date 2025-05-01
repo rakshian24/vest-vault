@@ -6,17 +6,19 @@ import {
   Divider,
   Stack,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import dayjs from "dayjs";
-import { colors, ISO_DATE_FORMAT } from "../constants";
+import { colors, grantYearColorPalette, ISO_DATE_FORMAT } from "../constants";
+import GrantYearColorLegend from "./GrantYearColorLegend";
 
 interface VestingEvent {
   _id: string;
   vestDate: string;
   grantedQty: number;
   vestedQty: number;
-  __typename: string;
+  grantDate?: string;
 }
 
 interface IRsuData {
@@ -69,17 +71,26 @@ const VestingSchedule = ({ rsuData }: VestingScheduleProps) => {
       }
 
       groupedRsusByYear[year].push({
-        _id: event._id,
-        vestDate: event.vestDate,
-        grantedQty: event.grantedQty,
-        vestedQty: event.vestedQty,
-        __typename: event.__typename,
+        ...event,
+        grantDate: rsu.grantDate,
       });
     });
   });
 
   let isCurrencyDollar = false;
   const currencySymbol = isCurrencyDollar ? "$" : "₹";
+
+  const grantDateColorMap: Record<string, string> = {};
+  const uniqueGrantDates = Array.from(
+    new Set(
+      rsuData.flatMap((rsu) => rsu.vestingSchedule.map(() => rsu.grantDate))
+    )
+  );
+
+  uniqueGrantDates.forEach((date, index) => {
+    grantDateColorMap[date] =
+      grantYearColorPalette[index % grantYearColorPalette.length];
+  });
 
   return (
     <Box>
@@ -93,6 +104,11 @@ const VestingSchedule = ({ rsuData }: VestingScheduleProps) => {
       >
         Vesting Schedule
       </Typography>
+
+      <GrantYearColorLegend
+        uniqueGrantDates={uniqueGrantDates}
+        grantDateColorMap={grantDateColorMap}
+      />
 
       <Box
         sx={{
@@ -193,32 +209,34 @@ const VestingSchedule = ({ rsuData }: VestingScheduleProps) => {
               <Divider />
 
               {schedule.map((item, index) => (
-                <Stack
+                <Tooltip
                   key={item._id}
-                  direction="row"
-                  spacing={2}
-                  p={2}
-                  bgcolor={colors.darkGrey2}
-                  borderBottom={`1px solid ${colors.darkGrey3}`}
-                  textAlign="center"
+                  title={`Granted in ${dayjs(item.grantDate).year()}`}
+                  arrow
+                  placement="right"
                 >
-                  <Typography sx={{ flex: 1 }}>{index + 1}</Typography>
-                  <Typography sx={{ flex: 1 }}>
-                    {dayjs(item.vestDate).format(ISO_DATE_FORMAT)}
-                  </Typography>
-                  <Typography sx={{ flex: 1 }}>{item.grantedQty}</Typography>
-                  <Typography sx={{ flex: 1 }}>
-                    {`${currencySymbol} ${(
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    p={2}
+                    bgcolor={grantDateColorMap[item.grantDate]}
+                    borderBottom={`1px solid ${colors.darkGrey3}`}
+                    textAlign="center"
+                  >
+                    <Typography sx={{ flex: 1 }}>{index + 1}</Typography>
+                    <Typography sx={{ flex: 1 }}>
+                      {dayjs(item.vestDate).format(ISO_DATE_FORMAT)}
+                    </Typography>
+                    <Typography sx={{ flex: 1 }}>{item.grantedQty}</Typography>
+                    <Typography sx={{ flex: 1 }}>{`${currencySymbol} ${(
                       item.grantedQty * FIXED_STOCK_PRICE
-                    ).toLocaleString()}`}
-                  </Typography>
-                  <Typography sx={{ flex: 1 }}>{item.vestedQty}</Typography>
-                  <Typography sx={{ flex: 1 }}>
-                    {`${currencySymbol} ${(
+                    ).toLocaleString()}`}</Typography>
+                    <Typography sx={{ flex: 1 }}>{item.vestedQty}</Typography>
+                    <Typography sx={{ flex: 1 }}>{`${currencySymbol} ${(
                       item.vestedQty * FIXED_STOCK_PRICE
-                    ).toLocaleString()}`}
-                  </Typography>
-                </Stack>
+                    ).toLocaleString()}`}</Typography>
+                  </Stack>
+                </Tooltip>
               ))}
             </AccordionDetails>
           </Accordion>

@@ -19,6 +19,9 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
     return sum + rsu.vestedUnits;
   }, 0);
 
+  const currentStockPrice = 600;
+  const UsdToInrValue = 83;
+
   return (
     <Stack gap={isTablet ? 3 : 4}>
       <Typography variant={isTablet ? "h5" : "h4"} mb={2}>
@@ -32,10 +35,10 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
           <StockUnitsOverview
             totalUnits={totalUnits}
             vestedUnits={vestedUnits}
-            totalGrantsValue={totalUnits * 600}
-            vestedInrValue={18707204}
-            usdToInr={83}
-            stockPrice={600}
+            totalGrantsValue={totalUnits * currentStockPrice * UsdToInrValue}
+            vestedInrValue={vestedUnits * currentStockPrice * UsdToInrValue}
+            usdToInr={UsdToInrValue}
+            stockPrice={currentStockPrice}
           />
           <VestingSchedule rsuData={data?.myRsus || []} />
         </Stack>

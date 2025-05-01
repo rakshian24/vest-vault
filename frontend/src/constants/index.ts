@@ -43,6 +43,20 @@ export const colors = {
   darkGrey1: "#F3F4F6",
   darkGrey2: "#F9FAFB",
   darkGrey3: "#E5E7EB",
+  lightGrey1: "#ccc",
 };
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";
+
+export const grantYearColorPalette = [
+  "#C1F4F7",
+  "#FFE6C7",
+  "#DAF5DC",
+  "#FEE4F3",
+  "#E3EFFF",
+  "#FFF6B7",
+  "#D2E0FB",
+  "#E6F9E4",
+  "#FCD2D1",
+  "#F5E9FF",
+];

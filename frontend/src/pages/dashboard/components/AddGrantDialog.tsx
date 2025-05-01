@@ -1,4 +1,4 @@
-import { CloseOutlined } from "@mui/icons-material";
+import { AddOutlined, CloseOutlined } from "@mui/icons-material";
 import { screenSize } from "../../../constants";
 import {
   Box,
@@ -48,7 +48,10 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
 
   const { errors } = formState;
   const COMMON_PROPS = { control: control, errors: errors };
-  const isFormDisabled = !formState.isValid;
+  const isFormDisabled =
+    !formState.isValid ||
+    Number(control._formValues.grantAmount) <= 0 ||
+    Number(control._formValues.stockPrice) <= 0;
 
   const onSubmitHandler = async (formValues: ICreateTodoFormValueTypes) => {
     setIsLoading(true);
@@ -119,6 +122,7 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
           component={"form"}
           noValidate
           onSubmit={handleSubmit(onSubmitHandler)}
+          gap={isTablet ? 2 : 0}
         >
           <DialogContent
             dividers
@@ -149,7 +153,7 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
             <Stack gap={2}>
               <Controller
                 name="grantDate"
-                rules={{ required: true }}
+                rules={{ required: "Grant date is required" }}
                 control={control}
                 render={({
                   field: { value, onChange },
@@ -171,8 +175,11 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
                 name="grantAmount"
                 {...COMMON_PROPS}
                 rules={{
-                  required: true,
-                  min: 0,
+                  required: "Grant amount is required",
+                  min: {
+                    value: 1,
+                    message: "Grant amount must be greater than 0",
+                  },
                 }}
                 render={({ field, fieldState: { error } }) => (
                   <CustomInputField
@@ -201,8 +208,11 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
                 name="stockPrice"
                 {...COMMON_PROPS}
                 rules={{
-                  required: true,
-                  min: 0,
+                  required: "Stock price is required",
+                  min: {
+                    value: 1,
+                    message: "Stock price must be greater than 0",
+                  },
                 }}
                 render={({ field, fieldState: { error } }) => (
                   <CustomInputField
@@ -239,7 +249,8 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
             }}
           >
             <Button
-              buttonText={"Create"}
+              startIcon={<AddOutlined />}
+              buttonText={"Add Grant"}
               isLoading={isLoading || isCreateTodoLoading}
               disabled={isFormDisabled}
               onClick={() => onSubmitHandler}

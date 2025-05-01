@@ -7,6 +7,7 @@ import { GET_MY_RSUS } from "../../graphql/queries";
 import VestingSchedule from "../../components/VestingSchedule";
 import { useCurrency } from "../../context/currencyContext";
 import StockUnitsOverview from "../../components/StockUnitsOverview";
+import NoGrants from "./components/NoGrants";
 
 const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const { isUSD } = useCurrency();
@@ -37,20 +38,26 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
       {isRsusLoading ? (
         <CommonSkeleton height={350} sx={{ borderRadius: isTablet ? 3 : 6 }} />
       ) : (
-        <Stack gap={3}>
-          <StockUnitsOverview
-            totalUnits={totalUnits}
-            vestedUnits={vestedUnits}
-            totalGrantsValue={totalUnits * FOREX_STOCK_PRICE}
-            vestedInrValue={vestedUnits * FOREX_STOCK_PRICE}
-            usdToInr={USD_TO_INR_VALUE}
-            stockPrice={FOREX_STOCK_PRICE}
-          />
-          <VestingSchedule
-            rsuData={data?.myRsus || []}
-            forexStockPrice={FOREX_STOCK_PRICE}
-          />
-        </Stack>
+        <>
+          {data && data.myRsus.length > 0 ? (
+            <Stack gap={3}>
+              <StockUnitsOverview
+                totalUnits={totalUnits}
+                vestedUnits={vestedUnits}
+                totalGrantsValue={totalUnits * FOREX_STOCK_PRICE}
+                vestedInrValue={vestedUnits * FOREX_STOCK_PRICE}
+                usdToInr={USD_TO_INR_VALUE}
+                stockPrice={FOREX_STOCK_PRICE}
+              />
+              <VestingSchedule
+                rsuData={data?.myRsus || []}
+                forexStockPrice={FOREX_STOCK_PRICE}
+              />
+            </Stack>
+          ) : (
+            <NoGrants />
+          )}
+        </>
       )}
     </Stack>
   );

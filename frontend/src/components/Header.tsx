@@ -14,21 +14,16 @@ import ProfileTab from "./ProfileTab";
 import { FaVault } from "react-icons/fa6";
 import Button from "./CustomButton";
 import { AddOutlined } from "@mui/icons-material";
-import AddGrantDialog from "../pages/dashboard/components/AddGrantDialog";
 import { useQuery } from "@apollo/client";
 import { GET_MY_RSUS } from "../graphql/queries";
 import CustomToggleSwitch from "./CustomToggleSwitch";
 import { useCurrency } from "../context/currencyContext";
+import { useGrantDialog } from "../context/GrantDialogContext";
 
 const Header = () => {
   const { user } = useAuth();
-  const [showAddGrantModal, setShowAddGrantModal] = useState<boolean>(false);
-
+  const { openGrantDialog, setOnCreated } = useGrantDialog();
   const { refetch } = useQuery(GET_MY_RSUS);
-
-  const handleRsuCreated = () => {
-    refetch();
-  };
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const popperRef = useRef<HTMLDivElement>(null);
@@ -77,11 +72,6 @@ const Header = () => {
       </Link>
       {user?.userId && (
         <>
-          <AddGrantDialog
-            open={showAddGrantModal}
-            handleClose={() => setShowAddGrantModal(false)}
-            onGrantCreated={handleRsuCreated}
-          />
           <Stack
             gap={2}
             display={"flex"}
@@ -98,7 +88,10 @@ const Header = () => {
             />
             <Button
               buttonText="Add Grant"
-              onClick={() => setShowAddGrantModal(true)}
+              onClick={() => {
+                setOnCreated(() => () => refetch());
+                openGrantDialog();
+              }}
               startIcon={<AddOutlined />}
             />
             <ClickAwayListener onClickAway={handleClickAway}>

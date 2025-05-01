@@ -59,7 +59,9 @@ const resolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
-      const myRsus = await Rsu.find({ createdBy: userId });
+      const myRsus = await Rsu.find({ createdBy: userId }).sort({
+        grantDate: 1,
+      });
 
       const rsusAsObjects = myRsus.map((todo) => todo.toObject()) as IRsu[];
 

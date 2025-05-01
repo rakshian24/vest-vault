@@ -41,7 +41,7 @@ type VestingScheduleProps = {
 };
 
 // 40 px for the chevron, then five equal columns for the numbers
-const GRID_TEMPLATE = "40px repeat(4, 1fr)";
+const GRID_TEMPLATE = "40px repeat(5, 1fr)";
 const CELL_SX = { textAlign: "center" };
 
 type PrimaryHeaderProps = {
@@ -134,12 +134,23 @@ const VestingSchedule = ({
         <PrimaryHeader label="Year" />
         <PrimaryHeader label="Units" />
         <PrimaryHeader label="Stock Price" />
-        <PrimaryHeader label="Value" />
+        <PrimaryHeader label="Granted Value" />
+        <PrimaryHeader label="Vested Value" />
       </Box>
 
       {Object.entries(groupedRsusByYear).map(([year, schedule]) => {
-        const yearUnits = schedule.reduce((acc, e) => acc + e.grantedQty, 0);
-        const primaryValue = yearUnits * forexStockPrice;
+        const yearGrantUnits = schedule.reduce(
+          (acc, e) => acc + e.grantedQty,
+          0
+        );
+
+        const yearVestedUnits = schedule.reduce(
+          (acc, e) => acc + e.vestedQty,
+          0
+        );
+
+        const yearGrantedValue = yearGrantUnits * forexStockPrice;
+        const yearVestedValue = yearVestedUnits * forexStockPrice;
 
         return (
           <Accordion
@@ -184,12 +195,15 @@ const VestingSchedule = ({
                 <Typography sx={{ ...CELL_SX, fontWeight: 600 }}>
                   {year}
                 </Typography>
-                <Typography sx={CELL_SX}>{yearUnits}</Typography>
+                <Typography sx={CELL_SX}>{yearGrantUnits}</Typography>
                 <Typography sx={CELL_SX}>
                   {`${symbol} ${formatNumber(forexStockPrice, isUSD)}`}
                 </Typography>
                 <Typography sx={CELL_SX}>
-                  {`${symbol} ${formatNumber(primaryValue, isUSD)}`}
+                  {`${symbol} ${formatNumber(yearGrantedValue, isUSD)}`}
+                </Typography>
+                <Typography sx={CELL_SX}>
+                  {`${symbol} ${formatNumber(yearVestedValue, isUSD)}`}
                 </Typography>
               </Box>
             </AccordionSummary>

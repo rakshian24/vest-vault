@@ -47,7 +47,11 @@ const Footer = ({ userInfo }: { userInfo: User | null }) => {
       <NavLink to={DASHBOARD}>
         <RiDashboardFill
           size={30}
-          color={pathname === DASHBOARD ? colors.brown : "#D7D8D9"}
+          color={
+            pathname === DASHBOARD
+              ? colors.mediumSlateIndigo
+              : colors.lightGrey2
+          }
         />
       </NavLink>
       <ClickAwayListener onClickAway={handleClickAway}>
@@ -58,7 +62,10 @@ const Footer = ({ userInfo }: { userInfo: User | null }) => {
               height: "32px",
               fontSize: "16px",
               fontWeight: 500,
-              backgroundColor: pathname === PROFILE ? colors.brown : "#D7D8D9",
+              backgroundColor:
+                pathname === PROFILE
+                  ? colors.mediumSlateIndigo
+                  : colors.lightGrey2,
             }}
             onClick={handleAvatarClick}
           >

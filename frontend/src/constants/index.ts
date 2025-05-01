@@ -44,6 +44,8 @@ export const colors = {
   darkGrey2: "#F9FAFB",
   darkGrey3: "#E5E7EB",
   lightGrey1: "#ccc",
+  safforn: "#FF9933",
+  green: "#7CFC00",
 };
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";

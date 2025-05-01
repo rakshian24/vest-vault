@@ -17,6 +17,8 @@ import { AddOutlined } from "@mui/icons-material";
 import AddGrantDialog from "../pages/dashboard/components/AddGrantDialog";
 import { useQuery } from "@apollo/client";
 import { GET_MY_RSUS } from "../graphql/queries";
+import CustomToggleSwitch from "./CustomToggleSwitch";
+import { useCurrency } from "../context/currencyContext";
 
 const Header = () => {
   const { user } = useAuth();
@@ -47,6 +49,8 @@ const Header = () => {
   };
 
   const open = Boolean(anchorEl);
+
+  const { toggleCurrency, isUSD } = useCurrency();
 
   return (
     <Stack
@@ -85,6 +89,13 @@ const Header = () => {
             alignItems={"center"}
             justifyContent={"space-between"}
           >
+            <CustomToggleSwitch
+              checked={!isUSD}
+              onChange={toggleCurrency}
+              label={isUSD ? "USD" : "INR"}
+              offStateColor={colors.white}
+              onStateColor={colors.safforn}
+            />
             <Button
               buttonText="Add Grant"
               onClick={() => setShowAddGrantModal(true)}

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
 import quarterOfYear from "dayjs/plugin/quarterOfYear";
 import utc from "dayjs/plugin/utc";
+
 dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
@@ -51,7 +52,7 @@ export const calculateVestingSchedule = (
   let vestedUnits = 0;
 
   // First 25% at 1 year mark
-  const firstVestDate = dayjs(grantDate).add(1, "year").startOf("day");
+  const firstVestDate = dayjs(grantDate).add(1, "year").utc().startOf("day");
   const isFirstVested =
     firstVestDate.isBefore(today) || firstVestDate.isSame(today, "day");
 
@@ -91,7 +92,7 @@ export const calculateVestingSchedule = (
   // Generate quarterly vesting events every 3 months from first vest date
   let current = firstVestDate;
   for (let i = 0; i < quarters; i++) {
-    current = current.add(3, "month").startOf("day");
+    current = current.add(3, "month").utc().startOf("day");
     const qty = mixedChunks[i];
     const isVested = current.isBefore(today) || current.isSame(today, "day");
 

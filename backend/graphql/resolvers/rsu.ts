@@ -3,6 +3,7 @@ import getLoggedInUserId from "../../middleware/getLoggedInUserId";
 import Rsu, { IRsu } from "../../models/Rsu";
 import { Types } from "mongoose";
 import { calculateVestingSchedule } from "../../utils";
+import dayjs from "dayjs";
 
 interface RsuInput {
   grantDate: string;
@@ -26,11 +27,15 @@ const resolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
+      const parsedGrantDate = dayjs(grantDate)
+        .startOf("day")
+        .format("YYYY-MM-DD");
+
       const { totalUnits, vestingSchedule, vestedUnits } =
-        calculateVestingSchedule(grantDate, grantAmount, stockPrice);
+        calculateVestingSchedule(parsedGrantDate, grantAmount, stockPrice);
 
       const newRsu = new Rsu({
-        grantDate,
+        grantDate: dayjs(parsedGrantDate).toDate(),
         grantAmount,
         stockPrice,
         totalUnits,

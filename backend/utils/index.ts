@@ -47,7 +47,7 @@ export const calculateVestingSchedule = (
   let vestedUnits = 0;
 
   // First 25% at 1 year mark
-  const firstVestDate = dayjs(grantDate).add(1, "year").startOf("day");
+  const firstVestDate = dayjs(grantDate).startOf("day").add(1, "year");
   const isFirstVested =
     firstVestDate.isBefore(today) || firstVestDate.isSame(today, "day");
 

@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
-import quarterOfYear from "dayjs/plugin/quarterOfYear";
-
-dayjs.extend(quarterOfYear);
 
 export const generateToken = async (user: any): Promise<string> => {
   return new Promise((resolve, reject) => {

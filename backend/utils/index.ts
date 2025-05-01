@@ -23,7 +23,7 @@ export const generateToken = async (user: any): Promise<string> => {
 };
 
 export const calculateVestingSchedule = (
-  grantDate: string,
+  grant: dayjs.Dayjs,
   grantAmount: number,
   stockPrice: number
 ): {
@@ -47,7 +47,7 @@ export const calculateVestingSchedule = (
   let vestedUnits = 0;
 
   // First 25% at 1 year mark
-  const firstVestDate = dayjs(grantDate).startOf("day").add(1, "year");
+  const firstVestDate = grant.add(1, "year");
   const isFirstVested =
     firstVestDate.isBefore(today) || firstVestDate.isSame(today, "day");
 
@@ -87,7 +87,7 @@ export const calculateVestingSchedule = (
   // Generate quarterly vesting events every 3 months from first vest date
   let current = firstVestDate;
   for (let i = 0; i < quarters; i++) {
-    current = current.add(3, "month").startOf("day");
+    current = current.add(3, "month");
     const qty = mixedChunks[i];
     const isVested = current.isBefore(today) || current.isSame(today, "day");
 

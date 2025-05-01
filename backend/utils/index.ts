@@ -51,7 +51,7 @@ export const calculateVestingSchedule = (
   let vestedUnits = 0;
 
   // First 25% at 1 year mark
-  const firstVestDate = dayjs(grantDate).add(1, "year");
+  const firstVestDate = dayjs(grantDate).add(1, "year").startOf("day");
   const isFirstVested =
     firstVestDate.isBefore(today) || firstVestDate.isSame(today, "day");
 
@@ -88,11 +88,10 @@ export const calculateVestingSchedule = (
     }
   }
 
-  // Generate remaining vesting events
+  // Generate quarterly vesting events every 3 months from first vest date
   let current = firstVestDate;
-
   for (let i = 0; i < quarters; i++) {
-    current = dayjs(current).add(3, "month").utc().endOf("quarter");
+    current = current.add(3, "month").startOf("day");
     const qty = mixedChunks[i];
     const isVested = current.isBefore(today) || current.isSame(today, "day");
 

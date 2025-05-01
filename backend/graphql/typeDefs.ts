@@ -2,6 +2,7 @@ import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
   scalar DateTime
+  scalar Date
 
   type User {
     _id: ID!
@@ -16,7 +17,7 @@ export const typeDefs = gql`
 
   type IVestingEvent {
     _id: ID!
-    vestDate: DateTime!
+    vestDate: Date!
     grantedQty: Int!
     vestedQty: Int!
   }
@@ -35,7 +36,7 @@ export const typeDefs = gql`
 
   type Rsu {
     _id: ID!
-    grantDate: DateTime!
+    grantDate: Date!
     grantAmount: Float!
     stockPrice: Float!
     totalUnits: Int!

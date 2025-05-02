@@ -3,7 +3,11 @@ import { screenSize } from "../../constants";
 import { User } from "../../context/authContext";
 import CommonSkeleton from "../../components/CommonSkeleton";
 import { useQuery } from "@apollo/client";
-import { GET_MY_RSUS } from "../../graphql/queries";
+import {
+  GET_EXCHANGE_RATE,
+  GET_MY_RSUS,
+  GET_STOCK_PRICE,
+} from "../../graphql/queries";
 import VestingSchedule from "../../components/VestingSchedule";
 import { useCurrency } from "../../context/currencyContext";
 import StockUnitsOverview from "../../components/StockUnitsOverview";
@@ -16,6 +20,27 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
 
   const { data, loading: isRsusLoading } = useQuery(GET_MY_RSUS);
 
+  const { data: exchangeRateData, loading: isExchangeRateLoading } =
+    useQuery(GET_EXCHANGE_RATE);
+
+  const { data: stockPriceData, loading: isStockPriceLoading } = useQuery(
+    GET_STOCK_PRICE,
+    {
+      variables: {
+        symbol: "INTU",
+      },
+    }
+  );
+
+  if (isRsusLoading || isExchangeRateLoading || isStockPriceLoading) {
+    return (
+      <Stack gap={isTablet ? 3 : 4}>
+        <CommonSkeleton height={250} sx={{ borderRadius: isTablet ? 3 : 6 }} />
+        <CommonSkeleton height={300} sx={{ borderRadius: isTablet ? 3 : 6 }} />
+      </Stack>
+    );
+  }
+
   const totalUnits = data?.myRsus?.reduce((sum: any, rsu: any) => {
     return sum + rsu.totalUnits;
   }, 0);
@@ -24,10 +49,10 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
     return sum + rsu.vestedUnits;
   }, 0);
 
-  const STOCK_PRICE = Number((617.89911).toFixed(2));
-  const USD_TO_INR_VALUE = Number((84.64).toFixed(2));
-  const FOREX_VALUE = isUSD ? 1 : USD_TO_INR_VALUE;
-  const FOREX_STOCK_PRICE = Number((STOCK_PRICE * FOREX_VALUE).toFixed(2));
+  const stockPrice = stockPriceData?.getStockPrice?.stockPriceInUSD;
+  const usdToInrValue = exchangeRateData?.getExchangeRate?.usdToInr;
+  const forexValue = isUSD ? 1 : usdToInrValue;
+  const forexStockPrice = stockPrice * forexValue;
 
   return (
     <Stack gap={isTablet ? 3 : 4}>
@@ -35,29 +60,23 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
         Welcome, {userInfo?.username}!
       </Typography>
 
-      {isRsusLoading ? (
-        <CommonSkeleton height={350} sx={{ borderRadius: isTablet ? 3 : 6 }} />
+      {data && data.myRsus.length > 0 ? (
+        <Stack gap={3}>
+          <StockUnitsOverview
+            totalUnits={totalUnits}
+            vestedUnits={vestedUnits}
+            totalGrantsValue={totalUnits * forexStockPrice}
+            vestedInrValue={vestedUnits * forexStockPrice}
+            usdToInr={usdToInrValue}
+            stockPrice={forexStockPrice}
+          />
+          <VestingSchedule
+            rsuData={data?.myRsus || []}
+            forexStockPrice={forexStockPrice}
+          />
+        </Stack>
       ) : (
-        <>
-          {data && data.myRsus.length > 0 ? (
-            <Stack gap={3}>
-              <StockUnitsOverview
-                totalUnits={totalUnits}
-                vestedUnits={vestedUnits}
-                totalGrantsValue={totalUnits * FOREX_STOCK_PRICE}
-                vestedInrValue={vestedUnits * FOREX_STOCK_PRICE}
-                usdToInr={USD_TO_INR_VALUE}
-                stockPrice={FOREX_STOCK_PRICE}
-              />
-              <VestingSchedule
-                rsuData={data?.myRsus || []}
-                forexStockPrice={FOREX_STOCK_PRICE}
-              />
-            </Stack>
-          ) : (
-            <NoGrants />
-          )}
-        </>
+        <NoGrants />
       )}
     </Stack>
   );

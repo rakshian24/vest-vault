@@ -3,7 +3,7 @@ import { colors } from "../constants";
 
 const skeletonCommonStyles: SxProps = {
   borderRadius: 2,
-  bgcolor: colors.lightGrey,
+  bgcolor: colors.lightGrey3,
 };
 
 const CommonSkeleton = ({ height = 47, width = "100%", sx }: SkeletonProps) => (

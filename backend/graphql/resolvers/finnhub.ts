@@ -45,7 +45,7 @@ const resolvers = {
       }
 
       return {
-        stockPriceInUSD: currentPrice,
+        stockPriceInUSD: +currentPrice.toFixed(2),
         source,
       };
     },

@@ -45,6 +45,7 @@ export const colors = {
   darkGrey3: "#E5E7EB",
   lightGrey1: "#ccc",
   lightGrey2: "#D7D8D9",
+  lightGrey3: "#E5E7EB",
   safforn: "#FF9933",
   green: "#7CFC00",
   slateGrey: "#9CA3AF",

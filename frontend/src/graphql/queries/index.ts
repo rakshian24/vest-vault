@@ -30,26 +30,20 @@ export const GET_MY_RSUS = gql`
   }
 `;
 
-export const GET_ALL_TODOS = gql`
-  query getAllTodos {
-    _id
-    title
-    description
-    isCompleted
-    createdAt
-    createdBy {
-      _id
-      username
+export const GET_STOCK_PRICE = gql`
+  query getStockPrice($symbol: String!) {
+    getStockPrice(symbol: $symbol) {
+      stockPriceInUSD
+      source
     }
   }
 `;
 
-export const GET_USER = gql`
-  query user($id: ID!) {
-    user(id: $id) {
-      _id
-      username
-      email
+export const GET_EXCHANGE_RATE = gql`
+  query {
+    getExchangeRate {
+      usdToInr
+      source
     }
   }
 `;

@@ -1,6 +1,6 @@
 import { createClient } from "@vercel/edge-config";
 
-export const edge = createClient(process.env.EDGE_CONFIG_DEV!);
+export const edge = createClient(process.env.EDGE_CONFIG!);
 
 export async function isEnabled(
   key: string,

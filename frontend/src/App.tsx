@@ -9,6 +9,7 @@ import Login from "./components/Login/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/dashboard";
 import Profile from "./pages/profile";
+import VestingSchedulePage from "./pages/vestingSchedule/VestingSchedulePage";
 
 function App() {
   const { user, isLoggedIn } = useAuth();
@@ -16,7 +17,7 @@ function App() {
   const isPcAndAbove = useMediaQuery(`(min-width:${screenSize.pc})`);
   const isMobile = useMediaQuery(`(max-width:${screenSize.mobile})`);
 
-  const { REGISTER, LOGIN, DASHBOARD, PROFILE } = ROUTES;
+  const { REGISTER, LOGIN, DASHBOARD, PROFILE, VESTING_SCHEDULE } = ROUTES;
 
   return (
     <Stack
@@ -56,6 +57,10 @@ function App() {
                   path={DASHBOARD}
                 />
                 <Route element={<Profile />} path={PROFILE} />
+                <Route
+                  element={<VestingSchedulePage />}
+                  path={VESTING_SCHEDULE}
+                />
               </Route>
             </Routes>
           </Stack>

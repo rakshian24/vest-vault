@@ -12,7 +12,7 @@ import VestingSchedule from "../../components/VestingSchedule";
 import { useCurrency } from "../../context/currencyContext";
 import StockUnitsOverview from "../../components/StockUnitsOverview";
 import NoGrants from "./components/NoGrants";
-import VestingScheduleMobile from "../../components/VestingSchedule/VestingScheduleMobile";
+import VestingScheduleSummary from "../../components/VestingSchedule/mobile/VestingScheduleSummary";
 
 const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const { isUSD } = useCurrency();
@@ -72,7 +72,7 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
             stockPrice={forexStockPrice}
           />
           {isTablet ? (
-            <VestingScheduleMobile
+            <VestingScheduleSummary
               rsuData={data?.myRsus || []}
               forexStockPrice={forexStockPrice}
             />

@@ -6,6 +6,7 @@ import { colors, screenSize } from "../../constants";
 import StockUnitItem from "./StockUnitItem";
 import StockUnitFooter from "./StockUnitFooter";
 import { formatNumber } from "../../utils";
+import StockPrice from "../StockPrice";
 
 type StockUnitsOverviewProps = {
   totalUnits: number;
@@ -30,7 +31,7 @@ const StockUnitsOverview = ({
 
   return (
     <Box p={3} borderRadius={isTablet ? 5 : 2} bgcolor={colors.white}>
-      <Typography fontWeight={600} mb={2} fontSize="1.1rem">
+      <Typography fontWeight={600} mb={2} fontSize="1.2rem">
         Stock Units Overview
       </Typography>
 
@@ -62,11 +63,7 @@ const StockUnitsOverview = ({
           label="USD/INR"
           value={`$1 = ₹${usdToInr}`}
         />
-        <StockUnitFooter
-          icon={<AiOutlineStock color={colors.white} fontSize={20} />}
-          label="Stock Price"
-          value={`${symbol} ${formatNumber(stockPrice, isUSD)}`}
-        />
+        <StockPrice value={`${symbol} ${formatNumber(stockPrice, isUSD)}`} />
       </Stack>
     </Box>
   );

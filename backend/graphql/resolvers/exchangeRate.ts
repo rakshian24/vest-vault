@@ -50,7 +50,7 @@ const resolvers = {
           throw new Error("Missing USD or INR rate from API response");
         }
 
-        usdToInr = +(inrPerEur / usdPerEur).toFixed(4);
+        usdToInr = +(inrPerEur / usdPerEur).toFixed(2);
 
         if (usdToInr > 0) {
           cache.set(EXCHANGE_RATE_KEY, usdToInr, EXCHANGE_RATE_TTL);

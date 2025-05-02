@@ -65,7 +65,6 @@ export const typeDefs = gql`
   type Query {
     me: User
     myRsus: [Rsu]
-    getAllTodos: [Rsu]
     user(id: ID!): User
     getStockPrice(symbol: String!): StockPrice
     getExchangeRate: ExchangeRate

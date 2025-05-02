@@ -139,7 +139,7 @@ const VestingScheduleMobile = ({ rsuData, forexStockPrice }: Props) => {
               <Box>
                 {events.map((event) => (
                   <Box key={event._id}>
-                    <Box borderRadius={2} px={2} py={1.5} bgcolor={"white"}>
+                    <Box borderRadius={2} px={2} py={"10px"} bgcolor={"white"}>
                       <Stack
                         direction={"row"}
                         justifyContent={"space-between"}
@@ -148,14 +148,14 @@ const VestingScheduleMobile = ({ rsuData, forexStockPrice }: Props) => {
                       >
                         <Typography
                           fontWeight={600}
-                          fontSize={17}
+                          fontSize={"0.95rem"}
                           color={colors.contentSecondary}
                         >
                           {dayjs(event.vestDate).format("MMM D")}
                         </Typography>
                         <Stack spacing={0}>
                           <Typography
-                            fontSize={16}
+                            fontSize={"0.9rem"}
                             color={colors.mediumSlateIndigo}
                             fontWeight={600}
                             textAlign={"right"}
@@ -166,7 +166,7 @@ const VestingScheduleMobile = ({ rsuData, forexStockPrice }: Props) => {
                             )}`}
                           </Typography>
                           <Typography
-                            fontSize={16}
+                            fontSize={"0.9rem"}
                             color={colors.green1}
                             fontWeight={600}
                             textAlign={"right"}
@@ -185,7 +185,7 @@ const VestingScheduleMobile = ({ rsuData, forexStockPrice }: Props) => {
                         alignItems={"center"}
                       >
                         <Typography
-                          fontSize={16}
+                          fontSize={"0.9rem"}
                           fontWeight={600}
                           color={colors.mediumSlateIndigo}
                         >
@@ -196,7 +196,7 @@ const VestingScheduleMobile = ({ rsuData, forexStockPrice }: Props) => {
                           style={{ margin: "0 8px" }}
                         />
                         <Typography
-                          fontSize={16}
+                          fontSize={"0.9rem"}
                           fontWeight={600}
                           color={colors.green1}
                         >

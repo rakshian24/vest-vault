@@ -13,6 +13,7 @@ import { useCurrency } from "../../context/currencyContext";
 import StockUnitsOverview from "../../components/StockUnitsOverview";
 import NoGrants from "./components/NoGrants";
 import VestingScheduleSummary from "../../components/VestingSchedule/mobile/VestingScheduleSummary";
+import StockGrantSummary from "../../components/StockGrantSummary";
 
 const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const { isUSD } = useCurrency();
@@ -70,6 +71,10 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
             vestedInrValue={vestedUnits * forexStockPrice}
             usdToInr={usdToInrValue}
             stockPrice={forexStockPrice}
+          />
+          <StockGrantSummary
+            rsuData={data?.myRsus || []}
+            forexStockPrice={forexStockPrice}
           />
           {isTablet ? (
             <VestingScheduleSummary

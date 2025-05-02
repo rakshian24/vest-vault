@@ -12,6 +12,7 @@ import VestingSchedule from "../../components/VestingSchedule";
 import { useCurrency } from "../../context/currencyContext";
 import StockUnitsOverview from "../../components/StockUnitsOverview";
 import NoGrants from "./components/NoGrants";
+import VestingScheduleMobile from "../../components/VestingSchedule/VestingScheduleMobile";
 
 const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const { isUSD } = useCurrency();
@@ -35,8 +36,8 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   if (isRsusLoading || isExchangeRateLoading || isStockPriceLoading) {
     return (
       <Stack gap={isTablet ? 3 : 4}>
-        <CommonSkeleton height={250} sx={{ borderRadius: isTablet ? 3 : 6 }} />
-        <CommonSkeleton height={300} sx={{ borderRadius: isTablet ? 3 : 6 }} />
+        <CommonSkeleton height={250} sx={{ borderRadius: 6 }} />
+        <CommonSkeleton height={300} sx={{ borderRadius: 6 }} />
       </Stack>
     );
   }
@@ -55,7 +56,7 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
   const forexStockPrice = stockPrice * forexValue;
 
   return (
-    <Stack gap={isTablet ? 3 : 4}>
+    <Stack gap={isTablet ? 0 : 4}>
       <Typography variant={isTablet ? "h5" : "h4"} mb={2}>
         Welcome, {userInfo?.username}!
       </Typography>
@@ -70,10 +71,17 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
             usdToInr={usdToInrValue}
             stockPrice={forexStockPrice}
           />
-          <VestingSchedule
-            rsuData={data?.myRsus || []}
-            forexStockPrice={forexStockPrice}
-          />
+          {isTablet ? (
+            <VestingScheduleMobile
+              rsuData={data?.myRsus || []}
+              forexStockPrice={forexStockPrice}
+            />
+          ) : (
+            <VestingSchedule
+              rsuData={data?.myRsus || []}
+              forexStockPrice={forexStockPrice}
+            />
+          )}
         </Stack>
       ) : (
         <NoGrants />

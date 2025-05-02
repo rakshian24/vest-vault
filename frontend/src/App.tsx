@@ -8,7 +8,6 @@ import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/dashboard";
-import Footer from "./components/Footer/Footer";
 import Profile from "./pages/profile";
 
 function App() {
@@ -28,7 +27,7 @@ function App() {
         bgcolor: colors.darkGrey1,
       }}
     >
-      {!isTablet && isLoggedIn && <Header />}
+      <Header />
       <Stack
         sx={{
           height: "100%",
@@ -62,7 +61,6 @@ function App() {
           </Stack>
         )}
       </Stack>
-      {isTablet && isLoggedIn && <Footer userInfo={user} />}
     </Stack>
   );
 }

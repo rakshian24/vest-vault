@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
   Tooltip,
+  useMediaQuery,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import dayjs from "dayjs";
@@ -14,26 +15,12 @@ import {
   colors,
   grantYearColorPalette,
   ISO_DATE_FORMAT,
+  screenSize,
 } from "../../constants";
 import { useCurrency } from "../../context/currencyContext";
 import { formatNumber } from "../../utils";
 import GrantYearColorLegend from "./GrantYearColorLegend";
-
-interface VestingEvent {
-  _id: string;
-  vestDate: string;
-  grantedQty: number;
-  vestedQty: number;
-  grantDate?: string;
-}
-
-interface IRsuData {
-  grantAmount: number;
-  grantDate: string;
-  stockPrice: number;
-  totalUnits: number;
-  vestingSchedule: VestingEvent[];
-}
+import { IRsuData } from "./types";
 
 type VestingScheduleProps = {
   rsuData: IRsuData[];
@@ -67,6 +54,7 @@ const VestingSchedule = ({
   forexStockPrice,
 }: VestingScheduleProps) => {
   const { symbol, isUSD } = useCurrency();
+  const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
 
   if (rsuData.length <= 0) return null;
 
@@ -100,14 +88,17 @@ const VestingSchedule = ({
   });
 
   return (
-    <Box>
+    <Box borderRadius={isTablet ? 5 : 2}>
       <Typography
         variant="h6"
         fontWeight={600}
         bgcolor={colors.charcoalNavy}
         color={colors.white}
         p={2}
-        sx={{ borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+        sx={{
+          borderTopLeftRadius: isTablet ? 20 : 8,
+          borderTopRightRadius: isTablet ? 20 : 8,
+        }}
       >
         Vesting Schedule
       </Typography>

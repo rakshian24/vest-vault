@@ -36,6 +36,7 @@ export const colors = {
 
   // App pallete
   mediumSlateIndigo: "#6366f1",
+  mediumSlateIndigo2: "#7B8FFF",
   charcoalNavy: "#1C283A",
   goldenYellow: "#FACC15",
   goldenYellowHover: "#EAB308",
@@ -46,8 +47,11 @@ export const colors = {
   lightGrey1: "#ccc",
   lightGrey2: "#D7D8D9",
   lightGrey3: "#E5E7EB",
+  lightGrey4: "#D5D6D8",
   safforn: "#FF9933",
   green: "#7CFC00",
+  green1: "#0DB981",
+  green2: "#33D399",
   slateGrey: "#9CA3AF",
 };
 

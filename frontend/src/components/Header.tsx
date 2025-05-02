@@ -5,10 +5,13 @@ import {
   Stack,
   ClickAwayListener,
   Typography,
+  useMediaQuery,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
-import { colors } from "../constants";
+import { colors, screenSize } from "../constants";
 import { getInitials } from "../utils";
 import ProfileTab from "./ProfileTab";
 import { FaVault } from "react-icons/fa6";
@@ -19,9 +22,12 @@ import { GET_MY_RSUS } from "../graphql/queries";
 import CustomToggleSwitch from "./CustomToggleSwitch";
 import { useCurrency } from "../context/currencyContext";
 import { useGrantDialog } from "../context/GrantDialogContext";
+import { RiMenu3Line } from "react-icons/ri";
 
 const Header = () => {
   const { user } = useAuth();
+  const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
+
   const { openGrantDialog, setOnCreated } = useGrantDialog();
   const { refetch } = useQuery(GET_MY_RSUS);
 
@@ -63,7 +69,10 @@ const Header = () => {
       <Link to={"/"}>
         <Box>
           <Box display="flex" alignItems="center" gap={1.5}>
-            <FaVault size={35} color={colors.mediumSlateIndigo} />
+            <FaVault
+              size={isTablet ? 30 : 35}
+              color={colors.mediumSlateIndigo}
+            />
             <Typography variant="h5" fontWeight="bold" color={colors.white}>
               VestVault
             </Typography>
@@ -86,38 +95,89 @@ const Header = () => {
               offStateColor={colors.white}
               onStateColor={colors.safforn}
             />
-            <Button
-              buttonText="Add Grant"
-              onClick={() => {
-                setOnCreated(() => () => refetch());
-                openGrantDialog();
-              }}
-              startIcon={<AddOutlined />}
-            />
-            <ClickAwayListener onClickAway={handleClickAway}>
-              <div>
-                <Avatar
-                  sx={{
-                    width: "40px",
-                    height: "40px",
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    backgroundColor: colors.mediumSlateIndigo,
-                    color: colors.white,
-                    cursor: "pointer",
+            {isTablet ? (
+              <>
+                <Tooltip title="Add Grant">
+                  <IconButton
+                    onClick={() => {
+                      setOnCreated(() => () => refetch());
+                      openGrantDialog();
+                    }}
+                    sx={{
+                      p: 1,
+                      bgcolor: colors.goldenYellow,
+                      color: colors.charcoalNavy,
+                      borderRadius: "50%",
+                      "&:hover": {
+                        bgcolor: colors.goldenYellow,
+                        opacity: 0.8,
+                      },
+                    }}
+                  >
+                    <AddOutlined />
+                  </IconButton>
+                </Tooltip>
+
+                <ClickAwayListener onClickAway={handleClickAway}>
+                  <Box>
+                    <IconButton
+                      onClick={(e) => {
+                        if (anchorEl) {
+                          handleClose();
+                        } else {
+                          setAnchorEl(e.currentTarget);
+                        }
+                      }}
+                      sx={{ color: colors.white }}
+                    >
+                      <RiMenu3Line />
+                    </IconButton>
+
+                    <ProfileTab
+                      open={open}
+                      anchorEl={anchorEl}
+                      popperRef={popperRef}
+                      handleClose={handleClose}
+                    />
+                  </Box>
+                </ClickAwayListener>
+              </>
+            ) : (
+              <>
+                <Button
+                  buttonText="Add Grant"
+                  onClick={() => {
+                    setOnCreated(() => () => refetch());
+                    openGrantDialog();
                   }}
-                  onClick={handleAvatarClick}
-                >
-                  {getInitials(user.username)}
-                </Avatar>
-                <ProfileTab
-                  open={open}
-                  anchorEl={anchorEl}
-                  popperRef={popperRef}
-                  handleClose={handleClose}
+                  startIcon={<AddOutlined />}
                 />
-              </div>
-            </ClickAwayListener>
+                <ClickAwayListener onClickAway={handleClickAway}>
+                  <div>
+                    <Avatar
+                      sx={{
+                        width: "40px",
+                        height: "40px",
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        backgroundColor: colors.mediumSlateIndigo,
+                        color: colors.white,
+                        cursor: "pointer",
+                      }}
+                      onClick={handleAvatarClick}
+                    >
+                      {getInitials(user.username)}
+                    </Avatar>
+                    <ProfileTab
+                      open={open}
+                      anchorEl={anchorEl}
+                      popperRef={popperRef}
+                      handleClose={handleClose}
+                    />
+                  </div>
+                </ClickAwayListener>
+              </>
+            )}
           </Stack>
         </>
       )}

@@ -1,8 +1,8 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import { AiOutlineStock } from "react-icons/ai";
 import { BsCurrencyExchange } from "react-icons/bs";
 import { useCurrency } from "../../context/currencyContext";
-import { colors } from "../../constants";
+import { colors, screenSize } from "../../constants";
 import StockUnitItem from "./StockUnitItem";
 import StockUnitFooter from "./StockUnitFooter";
 import { formatNumber } from "../../utils";
@@ -24,10 +24,12 @@ const StockUnitsOverview = ({
   usdToInr,
   stockPrice,
 }: StockUnitsOverviewProps) => {
+  const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
+
   const { symbol, isUSD } = useCurrency();
 
   return (
-    <Box p={3} borderRadius={2} bgcolor={colors.white}>
+    <Box p={3} borderRadius={isTablet ? 5 : 2} bgcolor={colors.white}>
       <Typography fontWeight={600} mb={2} fontSize="1.1rem">
         Stock Units Overview
       </Typography>

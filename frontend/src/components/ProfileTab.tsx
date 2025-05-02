@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   useMediaQuery,
+  Divider,
 } from "@mui/material";
 import React from "react";
 import { colors, ROUTES, screenSize } from "../constants";
@@ -66,6 +67,7 @@ const ProfileTab = ({ open, anchorEl, popperRef, handleClose }: Props) => {
               </Typography>
             </Stack>
           </Stack>
+
           <List
             component="nav"
             sx={{
@@ -87,6 +89,7 @@ const ProfileTab = ({ open, anchorEl, popperRef, handleClose }: Props) => {
               </ListItemIcon>
               <ListItemText primary="Profile" />
             </ListItemButton>
+            <Divider sx={{ my: 0.5, mx: 1 }} />
             <ListItemButton
               onClick={() => {
                 handleLogout();

@@ -46,6 +46,16 @@ export const typeDefs = gql`
     createdAt: DateTime
   }
 
+  type StockPrice {
+    stockPriceInUSD: Float!
+    source: String!
+  }
+
+  type ExchangeRate {
+    usdToInr: Float!
+    source: String!
+  }
+
   input RsuInput {
     grantDate: String!
     grantAmount: String!
@@ -57,6 +67,8 @@ export const typeDefs = gql`
     myRsus: [Rsu]
     getAllTodos: [Rsu]
     user(id: ID!): User
+    getStockPrice(symbol: String!): StockPrice
+    getExchangeRate: ExchangeRate
   }
 
   type Mutation {

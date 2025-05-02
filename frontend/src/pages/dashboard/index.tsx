@@ -8,13 +8,8 @@ import VestingSchedule from "../../components/VestingSchedule";
 import { useCurrency } from "../../context/currencyContext";
 import StockUnitsOverview from "../../components/StockUnitsOverview";
 import NoGrants from "./components/NoGrants";
-import { useFlag } from "../../featureFlag/useFlag";
 
 const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
-  /* A sample code to test if the vercel feature flag is working - should be removed later */
-  const showNew = useFlag("enableNewDashboard", false);
-  console.log("SHOW_NEW_FF_VALUE = ", showNew);
-
   const { isUSD } = useCurrency();
 
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
@@ -38,11 +33,6 @@ const Dashboard = ({ userInfo }: { userInfo: User | null }) => {
     <Stack gap={isTablet ? 3 : 4}>
       <Typography variant={isTablet ? "h5" : "h4"} mb={2}>
         Welcome, {userInfo?.username}!
-      </Typography>
-
-      {/* A sample code to test if the vercel feature flag is working - should be removed later */}
-      <Typography variant="h4">
-        {showNew ? "I am from Feature Flag" : "I am NOT from Feature Flag"}
       </Typography>
 
       {isRsusLoading ? (

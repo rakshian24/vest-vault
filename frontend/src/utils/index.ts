@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const textInputRegex =
   /^(?!\s+$)[~!\s@#$%^&*()_+=[\]{}|;':",./<>?a-zA-Z0-9-]+$/;
 
@@ -48,4 +50,44 @@ export const formatNumber = (
     : {};
 
   return new Intl.NumberFormat(isUSD ? "en-US" : "en-IN", options).format(num);
+};
+
+export function formatCompactNumber(value: number, isUSD: boolean): string {
+  const absValue = Math.abs(value);
+  const formatter = (num: number, suffix: string) =>
+    `${num.toFixed(num % 1 === 0 ? 1 : 2).replace(/\.0+$/, ".0")} ${suffix}`;
+
+  if (!isUSD) {
+    if (absValue >= 1e7) return formatter(value / 1e7, "Cr"); // Crore
+    if (absValue >= 1e5) return formatter(value / 1e5, "L"); // Lakh
+    if (absValue >= 1e3) return formatter(value / 1e3, "K"); // Thousand
+    return value.toFixed(2);
+  }
+
+  if (absValue >= 1e9) return formatter(value / 1e9, "B"); // Billion
+  if (absValue >= 1e6) return formatter(value / 1e6, "M"); // Million
+  if (absValue >= 1e3) return formatter(value / 1e3, "K"); // Thousand
+  return value.toFixed(2);
+}
+
+export const getUnitsInPipeline = (
+  unitsByYear: Record<number, number>
+): string => {
+  const currentYear = dayjs().year();
+  const nextYear = currentYear + 1;
+  const yearAfterNext = currentYear + 2;
+
+  const get = (year: number) => unitsByYear[year] || 0;
+
+  // Current year has data
+  if (get(currentYear) > 0) {
+    return `${currentYear}: ${get(currentYear)}, ${nextYear}: ${get(nextYear)}`;
+  }
+
+  // No data in current year – show next two years
+  const yearsToShow = [nextYear, yearAfterNext]
+    .filter((y) => get(y) > 0)
+    .map((y) => `${y}: ${get(y)}`);
+
+  return yearsToShow.join(", ") || "No upcoming units";
 };

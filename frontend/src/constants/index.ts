@@ -12,6 +12,7 @@ export const ROUTES = {
   LOGOUT: "/logout",
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
+  VESTING_SCHEDULE: "/vesting-schedule",
 };
 
 export const colors = {

@@ -54,17 +54,17 @@ const VestingScheduleSummary = ({ rsuData, forexStockPrice }: Props) => {
   return (
     <Stack spacing={2}>
       <Stack
+        display={"flex"}
         direction={"row"}
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <Typography fontWeight={600} mb={1} fontSize="1.2rem">
+        <Typography fontWeight={600} fontSize="1.2rem">
           Vesting Schedule
         </Typography>
         <NavLink to={ROUTES.VESTING_SCHEDULE}>
           <Typography
             fontWeight={500}
-            mb={1}
             fontSize="1rem"
             color={colors.mediumSlateIndigo}
           >

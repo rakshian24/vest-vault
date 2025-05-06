@@ -58,7 +58,7 @@ export const colors = {
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";
 
-export const grantYearColorPalette = [
+export const grantYearColorPaletteForDesktop = [
   "#C1F4F7",
   "#FFE6C7",
   "#DAF5DC",
@@ -69,4 +69,19 @@ export const grantYearColorPalette = [
   "#E6F9E4",
   "#FCD2D1",
   "#F5E9FF",
+];
+
+export const grantYearColorPaletteForMobile = [
+  "#8B5CF6", // Dark Violet
+  "#22D3EE", // Cyan Blue
+  "#F59E0B", // Amber
+  "#10B981", // Emerald
+  "#EF4444", // Red
+  "#6366F1", // Indigo
+  "#E11D48", // Rose
+  "#0EA5E9", // Sky Blue
+  "#A855F7", // Purple
+  "#F97316", // Orange
+  "#14B8A6", // Teal
+  "#BE185D", // Pinkish Red
 ];

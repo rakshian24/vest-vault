@@ -13,7 +13,11 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { FaArrowRight, FaChevronLeft } from "react-icons/fa6";
 import { useCurrency } from "../../context/currencyContext";
-import { colors, ROUTES } from "../../constants";
+import {
+  colors,
+  grantYearColorPaletteForMobile,
+  ROUTES,
+} from "../../constants";
 import { formatNumber } from "../../utils";
 import { useQuery } from "@apollo/client";
 import {
@@ -25,6 +29,8 @@ import CommonSkeleton from "../../components/CommonSkeleton";
 import { IRsuData } from "../../components/VestingSchedule/types";
 import { NavLink } from "react-router-dom";
 import StockPrice from "../../components/StockPrice";
+import GrantYearColorLegend from "../../components/VestingSchedule/GrantYearColorLegend";
+import NoGrants from "../dashboard/components/NoGrants";
 
 const VestingSchedulePage = () => {
   const { symbol, isUSD } = useCurrency();
@@ -55,6 +61,12 @@ const VestingSchedulePage = () => {
     );
   }
 
+  const rsuData: IRsuData[] = data?.myRsus || [];
+
+  if (rsuData.length === 0) {
+    return <NoGrants />;
+  }
+
   const stockPrice = stockPriceData?.getStockPrice?.stockPriceInUSD;
   const usdToInrValue = exchangeRateData?.getExchangeRate?.usdToInr;
   const forexValue = isUSD ? 1 : usdToInrValue;
@@ -62,17 +74,41 @@ const VestingSchedulePage = () => {
 
   const groupedByYear: Record<string, any[]> = {};
 
-  data?.myRsus.forEach((rsu: IRsuData) => {
+  rsuData.forEach((rsu: IRsuData) => {
     rsu.vestingSchedule.forEach((event) => {
       const year = dayjs(event.vestDate).year().toString();
       if (!groupedByYear[year]) groupedByYear[year] = [];
-      groupedByYear[year].push({ ...event, stockPrice: rsu.stockPrice });
+      groupedByYear[year].push({
+        ...event,
+        stockPrice: rsu.stockPrice,
+        grantDate: rsu.grantDate,
+      });
     });
   });
 
   const handleToggle = (year: string) => {
     setExpandedYears((prev) => ({ ...prev, [year]: !prev[year] }));
   };
+
+  const grantDateColorMap: Record<string, string> = {};
+  let uniqueGrantDates: string[] = [];
+
+  uniqueGrantDates = Array.from(
+    new Set(
+      rsuData.flatMap((rsu: IRsuData) =>
+        rsu.vestingSchedule.map(() => rsu.grantDate)
+      )
+    )
+  );
+
+  uniqueGrantDates.forEach((date, index) => {
+    grantDateColorMap[date] =
+      grantYearColorPaletteForMobile[
+        index % grantYearColorPaletteForMobile.length
+      ];
+  });
+
+  const showColorLegend = uniqueGrantDates.length > 1;
 
   return (
     <Stack>
@@ -84,13 +120,19 @@ const VestingSchedulePage = () => {
           Vesting Schedule
         </Typography>
       </Stack>
-      <Box sx={{ alignSelf: "flex-end", mb: 2 }}>
+      <Box sx={{ alignSelf: "flex-end", mb: showColorLegend ? 0 : 2 }}>
         <StockPrice
           value={`${symbol} ${formatNumber(forexStockPrice, isUSD)}`}
           color={colors.charcoalNavy}
           sx={{ m: 0 }}
         />
       </Box>
+      {showColorLegend && (
+        <GrantYearColorLegend
+          uniqueGrantDates={uniqueGrantDates}
+          grantDateColorMap={grantDateColorMap}
+        />
+      )}
       <Stack spacing={2}>
         {Object.entries(groupedByYear).map(([year, events]) => {
           const yearGrantUnits = events.reduce(
@@ -189,76 +231,97 @@ const VestingSchedulePage = () => {
                 <Box>
                   {events.map((event) => (
                     <Box key={event._id}>
-                      <Box
-                        borderRadius={2}
-                        px={2}
-                        py={"10px"}
-                        bgcolor={"white"}
-                      >
-                        <Stack
-                          direction={"row"}
-                          justifyContent={"space-between"}
-                          display={"flex"}
-                          alignItems={"center"}
-                        >
-                          <Typography
-                            fontWeight={600}
-                            fontSize={"0.95rem"}
-                            color={colors.contentSecondary}
+                      <Stack direction={"row"} alignItems={"stretch"}>
+                        {showColorLegend && (
+                          <Box
+                            ml={2}
+                            display={"flex"}
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                            py={2}
                           >
-                            {dayjs(event.vestDate).format("MMM D")}
-                          </Typography>
-                          <Stack spacing={0}>
+                            <Box
+                              sx={{
+                                width: "4px",
+                                height: "100%",
+                                bgcolor: grantDateColorMap[event.grantDate],
+                                borderRadius: "14px",
+                              }}
+                            />
+                          </Box>
+                        )}
+                        <Box
+                          borderRadius={2}
+                          px={2}
+                          py={"10px"}
+                          bgcolor={"white"}
+                          width={"100%"}
+                        >
+                          <Stack
+                            direction={"row"}
+                            justifyContent={"space-between"}
+                            display={"flex"}
+                            alignItems={"center"}
+                          >
                             <Typography
-                              fontSize={"0.9rem"}
-                              color={colors.mediumSlateIndigo}
                               fontWeight={600}
-                              textAlign={"right"}
+                              fontSize={"0.95rem"}
+                              color={colors.contentSecondary}
                             >
-                              {`${symbol} ${formatNumber(
-                                event.grantedQty * forexStockPrice,
-                                isUSD
-                              )}`}
+                              {dayjs(event.vestDate).format("MMM D")}
                             </Typography>
+                            <Stack spacing={0}>
+                              <Typography
+                                fontSize={"0.9rem"}
+                                color={colors.mediumSlateIndigo}
+                                fontWeight={600}
+                                textAlign={"right"}
+                              >
+                                {`${symbol} ${formatNumber(
+                                  event.grantedQty * forexStockPrice,
+                                  isUSD
+                                )}`}
+                              </Typography>
+                              <Typography
+                                fontSize={"0.9rem"}
+                                color={colors.green1}
+                                fontWeight={600}
+                                textAlign={"right"}
+                              >
+                                {`${symbol} ${formatNumber(
+                                  event.vestedQty * forexStockPrice,
+                                  isUSD
+                                )}`}
+                              </Typography>
+                            </Stack>
+                          </Stack>
+                          <Stack
+                            direction={"row"}
+                            spacing={0.5}
+                            display={"flex"}
+                            alignItems={"center"}
+                          >
                             <Typography
                               fontSize={"0.9rem"}
-                              color={colors.green1}
                               fontWeight={600}
-                              textAlign={"right"}
+                              color={colors.mediumSlateIndigo}
                             >
-                              {`${symbol} ${formatNumber(
-                                event.vestedQty * forexStockPrice,
-                                isUSD
-                              )}`}
+                              Granted: {event.grantedQty}
+                            </Typography>
+                            <FaArrowRight
+                              color={colors.contentTertiary}
+                              style={{ margin: "0 8px" }}
+                            />
+                            <Typography
+                              fontSize={"0.9rem"}
+                              fontWeight={600}
+                              color={colors.green1}
+                            >
+                              Vested: {event.vestedQty}
                             </Typography>
                           </Stack>
-                        </Stack>
-                        <Stack
-                          direction={"row"}
-                          spacing={0.5}
-                          display={"flex"}
-                          alignItems={"center"}
-                        >
-                          <Typography
-                            fontSize={"0.9rem"}
-                            fontWeight={600}
-                            color={colors.mediumSlateIndigo}
-                          >
-                            Granted: {event.grantedQty}
-                          </Typography>
-                          <FaArrowRight
-                            color={colors.contentTertiary}
-                            style={{ margin: "0 8px" }}
-                          />
-                          <Typography
-                            fontSize={"0.9rem"}
-                            fontWeight={600}
-                            color={colors.green1}
-                          >
-                            Vested: {event.vestedQty}
-                          </Typography>
-                        </Stack>
-                      </Box>
+                        </Box>
+                      </Stack>
                       <Divider
                         sx={{
                           height: "0.1px",

@@ -13,7 +13,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import dayjs from "dayjs";
 import {
   colors,
-  grantYearColorPalette,
+  grantYearColorPaletteForDesktop,
   ISO_DATE_FORMAT,
   screenSize,
 } from "../../constants";
@@ -84,7 +84,7 @@ const VestingSchedule = ({
 
   uniqueGrantDates.forEach((date, index) => {
     grantDateColorMap[date] =
-      grantYearColorPalette[index % grantYearColorPalette.length];
+      grantYearColorPaletteForDesktop[index % grantYearColorPaletteForDesktop.length];
   });
 
   return (

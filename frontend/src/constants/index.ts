@@ -54,6 +54,11 @@ export const colors = {
   green1: "#0DB981",
   green2: "#33D399",
   slateGrey: "#9CA3AF",
+  emeraldGreen: "#00C49A",
+  emeraldGreenLight: "#00C49A1A",
+  skyBlue: "#4299E1",
+  amber: "#F59E0B",
+  amberLight: "#F59E0B1A",
 };
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";

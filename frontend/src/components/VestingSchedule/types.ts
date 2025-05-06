@@ -7,9 +7,11 @@ export interface VestingEvent {
 }
 
 export interface IRsuData {
+  _id: string;
   grantAmount: number;
   grantDate: string;
   stockPrice: number;
   totalUnits: number;
+  vestedUnits: number;
   vestingSchedule: VestingEvent[];
 }

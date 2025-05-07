@@ -6,8 +6,6 @@ import {
   ClickAwayListener,
   Typography,
   useMediaQuery,
-  IconButton,
-  Tooltip,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
@@ -19,10 +17,11 @@ import Button from "./CustomButton";
 import { AddOutlined } from "@mui/icons-material";
 import { useQuery } from "@apollo/client";
 import { GET_MY_RSUS } from "../graphql/queries";
-import CustomToggleSwitch from "./CustomToggleSwitch";
 import { useCurrency } from "../context/currencyContext";
 import { useGrantDialog } from "../context/GrantDialogContext";
-import { RiMenu3Line } from "react-icons/ri";
+import CustomSegmentedToggle, {
+  CustomSegmentedToggleOption,
+} from "./CustomSegmentedToggle";
 
 const Header = () => {
   const { user } = useAuth();
@@ -52,6 +51,11 @@ const Header = () => {
   const open = Boolean(anchorEl);
 
   const { toggleCurrency, isUSD } = useCurrency();
+
+  const toggleOptions: CustomSegmentedToggleOption<"USD" | "INR">[] = [
+    { label: "USD", value: "USD" },
+    { label: "INR", value: "INR" },
+  ];
 
   return (
     <Stack
@@ -88,96 +92,48 @@ const Header = () => {
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <CustomToggleSwitch
-              checked={!isUSD}
+            <CustomSegmentedToggle
+              options={toggleOptions}
+              selected={isUSD ? "USD" : "INR"}
               onChange={toggleCurrency}
-              label={isUSD ? "USD" : "INR"}
-              offStateColor={colors.white}
-              onStateColor={colors.safforn}
+              sx={{ minWidth: 20 }}
+              thumbColor={colors.mediumSlateIndigo}
+              bgColor={colors.charcoalNavy}
             />
-            {isTablet ? (
-              <>
-                <Tooltip title="Add Grant">
-                  <IconButton
-                    onClick={() => {
-                      setOnCreated(() => () => refetch());
-                      openGrantDialog();
-                    }}
-                    sx={{
-                      p: 1,
-                      bgcolor: colors.goldenYellow,
-                      color: colors.charcoalNavy,
-                      borderRadius: "50%",
-                      "&:hover": {
-                        bgcolor: colors.goldenYellow,
-                        opacity: 0.8,
-                      },
-                    }}
-                  >
-                    <AddOutlined />
-                  </IconButton>
-                </Tooltip>
-
-                <ClickAwayListener onClickAway={handleClickAway}>
-                  <Box>
-                    <IconButton
-                      onClick={(e) => {
-                        if (anchorEl) {
-                          handleClose();
-                        } else {
-                          setAnchorEl(e.currentTarget);
-                        }
-                      }}
-                      sx={{ color: colors.white }}
-                    >
-                      <RiMenu3Line />
-                    </IconButton>
-
-                    <ProfileTab
-                      open={open}
-                      anchorEl={anchorEl}
-                      popperRef={popperRef}
-                      handleClose={handleClose}
-                    />
-                  </Box>
-                </ClickAwayListener>
-              </>
-            ) : (
-              <>
-                <Button
-                  buttonText="Add Grant"
-                  onClick={() => {
-                    setOnCreated(() => () => refetch());
-                    openGrantDialog();
-                  }}
-                  startIcon={<AddOutlined />}
-                />
-                <ClickAwayListener onClickAway={handleClickAway}>
-                  <div>
-                    <Avatar
-                      sx={{
-                        width: "40px",
-                        height: "40px",
-                        fontSize: "16px",
-                        fontWeight: 500,
-                        backgroundColor: colors.mediumSlateIndigo,
-                        color: colors.white,
-                        cursor: "pointer",
-                      }}
-                      onClick={handleAvatarClick}
-                    >
-                      {getInitials(user.username)}
-                    </Avatar>
-                    <ProfileTab
-                      open={open}
-                      anchorEl={anchorEl}
-                      popperRef={popperRef}
-                      handleClose={handleClose}
-                    />
-                  </div>
-                </ClickAwayListener>
-              </>
+            {!isTablet && (
+              <Button
+                buttonText="Add Grant"
+                onClick={() => {
+                  setOnCreated(() => () => refetch());
+                  openGrantDialog();
+                }}
+                startIcon={<AddOutlined />}
+              />
             )}
+            <ClickAwayListener onClickAway={handleClickAway}>
+              <div>
+                <Avatar
+                  sx={{
+                    width: "40px",
+                    height: "40px",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                    backgroundColor: colors.mediumSlateIndigo,
+                    color: colors.white,
+                    cursor: "pointer",
+                  }}
+                  onClick={handleAvatarClick}
+                >
+                  {getInitials(user.username)}
+                </Avatar>
+                <ProfileTab
+                  open={open}
+                  anchorEl={anchorEl}
+                  popperRef={popperRef}
+                  handleClose={handleClose}
+                />
+              </div>
+            </ClickAwayListener>
           </Stack>
         </>
       )}

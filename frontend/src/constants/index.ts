@@ -13,6 +13,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
   VESTING_SCHEDULE: "/vesting-schedule",
+  MANAGE_GRANTS: "/manage-grants",
 };
 
 export const colors = {
@@ -59,6 +60,7 @@ export const colors = {
   skyBlue: "#4299E1",
   amber: "#F59E0B",
   amberLight: "#F59E0B1A",
+  lightGrayishBlue: "#E0E7ED"
 };
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";

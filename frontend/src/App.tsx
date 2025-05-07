@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/dashboard";
 import Profile from "./pages/profile";
 import VestingSchedulePage from "./pages/vestingSchedule/VestingSchedulePage";
+import ManageGrantsPage from "./pages/manageGrants";
 
 function App() {
   const { user, isLoggedIn } = useAuth();
@@ -17,7 +18,14 @@ function App() {
   const isPcAndAbove = useMediaQuery(`(min-width:${screenSize.pc})`);
   const isMobile = useMediaQuery(`(max-width:${screenSize.mobile})`);
 
-  const { REGISTER, LOGIN, DASHBOARD, PROFILE, VESTING_SCHEDULE } = ROUTES;
+  const {
+    REGISTER,
+    LOGIN,
+    DASHBOARD,
+    PROFILE,
+    VESTING_SCHEDULE,
+    MANAGE_GRANTS,
+  } = ROUTES;
 
   return (
     <Stack
@@ -61,6 +69,7 @@ function App() {
                   element={<VestingSchedulePage />}
                   path={VESTING_SCHEDULE}
                 />
+                <Route element={<ManageGrantsPage />} path={MANAGE_GRANTS} />
               </Route>
             </Routes>
           </Stack>

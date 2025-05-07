@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import AddGrantDialog from "../pages/dashboard/components/AddGrantDialog";
+import { IRsuData } from "../components/VestingSchedule/types";
 
 interface GrantDialogContextType {
-  openGrantDialog: () => void;
+  openGrantDialog: (editGrant?: IRsuData) => void;
   closeGrantDialog: () => void;
   isOpen: boolean;
   setOnCreated: (cb: () => void) => void;
+  editGrant?: IRsuData;
 }
 
 const GrantDialogContext = createContext<GrantDialogContextType | undefined>(
@@ -15,9 +17,17 @@ const GrantDialogContext = createContext<GrantDialogContextType | undefined>(
 export const GrantDialogProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [onCreated, setOnCreated] = useState<() => void>(() => {});
+  const [editGrant, setEditGrant] = useState<IRsuData | undefined>(undefined);
 
-  const openGrantDialog = () => setIsOpen(true);
-  const closeGrantDialog = () => setIsOpen(false);
+  const openGrantDialog = (grant?: IRsuData) => {
+    setEditGrant(grant);
+    setIsOpen(true);
+  };
+
+  const closeGrantDialog = () => {
+    setEditGrant(undefined);
+    setIsOpen(false);
+  };
 
   return (
     <GrantDialogContext.Provider
@@ -26,6 +36,7 @@ export const GrantDialogProvider = ({ children }: { children: ReactNode }) => {
         openGrantDialog,
         closeGrantDialog,
         setOnCreated,
+        editGrant,
       }}
     >
       {children}
@@ -36,6 +47,7 @@ export const GrantDialogProvider = ({ children }: { children: ReactNode }) => {
           onCreated?.();
           closeGrantDialog();
         }}
+        grantToEdit={editGrant}
       />
     </GrantDialogContext.Provider>
   );

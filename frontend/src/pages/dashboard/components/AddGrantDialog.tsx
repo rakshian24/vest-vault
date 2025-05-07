@@ -11,10 +11,13 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { ICreateTodoFormValueTypes, InitCreateTodoFormValues } from "./helper";
-import { CREATE_RSU } from "../../../graphql/mutations";
+import {
+  ICreateGrantFormValueTypes,
+  InitCreateGrantFormValues,
+} from "./helper";
+import { CREATE_RSU, UPDATE_RSU } from "../../../graphql/mutations";
 import { useMutation } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomSnackBar from "../../../components/CustomSnackBar";
 import ErrorBox from "../../../components/ErrorBox";
 import Button from "../../../components/CustomButton";
@@ -22,14 +25,21 @@ import CustomDatePicker from "../../../components/CustomDatePicker";
 import dayjs from "dayjs";
 import { CustomInputField } from "../../../components/CustomInputField";
 import { FaDollarSign } from "react-icons/fa6";
+import { IRsuData } from "../../../components/VestingSchedule/types";
 
 type Props = {
   handleClose: () => void;
   open: boolean;
   onGrantCreated: () => void;
+  grantToEdit?: IRsuData;
 };
 
-const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
+const AddGrantDialog = ({
+  open,
+  handleClose,
+  onGrantCreated,
+  grantToEdit,
+}: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -40,11 +50,28 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
 
   const { control, formState, handleSubmit, reset } = useForm({
-    defaultValues: { ...InitCreateTodoFormValues },
+    defaultValues: { ...InitCreateGrantFormValues },
     mode: "onChange",
   });
 
-  const [createRsu, { loading: isCreateTodoLoading }] = useMutation(CREATE_RSU);
+  const [createRsu, { loading: isCreateGrantLoading }] =
+    useMutation(CREATE_RSU);
+  const [updateRsu, { loading: isUpdateGrantLoading }] =
+    useMutation(UPDATE_RSU);
+
+  useEffect(() => {
+    if (open) {
+      if (grantToEdit) {
+        reset({
+          grantAmount: grantToEdit.grantAmount,
+          stockPrice: grantToEdit.stockPrice,
+          grantDate: dayjs(grantToEdit.grantDate).toString(),
+        });
+      } else {
+        reset({ ...InitCreateGrantFormValues });
+      }
+    }
+  }, [grantToEdit, open, reset]);
 
   const { errors } = formState;
   const COMMON_PROPS = { control: control, errors: errors };
@@ -53,27 +80,45 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
     Number(control._formValues.grantAmount) <= 0 ||
     Number(control._formValues.stockPrice) <= 0;
 
-  const onSubmitHandler = async (formValues: ICreateTodoFormValueTypes) => {
+  const onSubmitHandler = async (formValues: ICreateGrantFormValueTypes) => {
     setIsLoading(true);
 
     try {
-      await createRsu({
-        variables: {
-          rsuInput: {
-            ...formValues,
-            grantDate: dayjs(formValues.grantDate).format("YYYY-MM-DD"),
+      if (grantToEdit) {
+        await updateRsu({
+          variables: {
+            rsuInput: {
+              ...formValues,
+              id: grantToEdit._id,
+              grantDate: dayjs(formValues.grantDate).format("YYYY-MM-DD"),
+              stockPrice: formValues.stockPrice.toString(),
+            },
           },
-        },
-      });
-      setSnackbarMessage("Rsu created successfully!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
+        });
+
+        setSnackbarMessage("Grant updated successfully!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      } else {
+        await createRsu({
+          variables: {
+            rsuInput: {
+              ...formValues,
+              grantDate: dayjs(formValues.grantDate).format("YYYY-MM-DD"),
+            },
+          },
+        });
+
+        setSnackbarMessage("Grant created successfully!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      }
 
       onGrantCreated();
 
       handleClose();
       reset({
-        ...InitCreateTodoFormValues,
+        ...InitCreateGrantFormValues,
       });
     } catch (error) {
       console.error("Error while creating todo: ", error);
@@ -115,7 +160,7 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
         }}
         open={open}
         onClose={() => {
-          reset({ ...InitCreateTodoFormValues });
+          reset({ ...InitCreateGrantFormValues });
         }}
       >
         <Stack
@@ -143,7 +188,7 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
                 alignItems={"center"}
               >
                 <Typography fontSize={isTablet ? 24 : 28} fontWeight={700}>
-                  {"Add New Grant"}
+                  {grantToEdit ? "Edit Grant" : "Add New Grant"}
                 </Typography>
                 <IconButton onClick={handleClose} sx={{ ml: "auto" }}>
                   <CloseOutlined />
@@ -249,9 +294,11 @@ const AddGrantDialog = ({ open, handleClose, onGrantCreated }: Props) => {
             }}
           >
             <Button
-              startIcon={<AddOutlined />}
-              buttonText={"Add Grant"}
-              isLoading={isLoading || isCreateTodoLoading}
+              startIcon={grantToEdit ? <></> : <AddOutlined />}
+              buttonText={grantToEdit ? "Update Grant" : "Add Grant"}
+              isLoading={
+                isLoading || isCreateGrantLoading || isUpdateGrantLoading
+              }
               disabled={isFormDisabled}
               onClick={() => onSubmitHandler}
             />

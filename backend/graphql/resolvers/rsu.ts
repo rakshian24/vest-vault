@@ -53,6 +53,60 @@ const resolvers = {
 
       return res;
     },
+    async updateRsu(
+      _: unknown,
+      {
+        rsuInput: { id, grantDate, grantAmount, stockPrice },
+      }: {
+        rsuInput: {
+          id: string;
+          grantDate: string;
+          grantAmount: string;
+          stockPrice: string;
+        };
+      },
+      ctx: any
+    ): Promise<IRsu> {
+      const loggedInUserId = getLoggedInUserId(ctx);
+      const userId = loggedInUserId?.userId;
+
+      if (!userId) {
+        throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
+      }
+
+      const existingGrant = await Rsu.findById(id);
+      if (!existingGrant) {
+        throw new ApolloError("Grant not found", "NOT_FOUND");
+      }
+
+      if (existingGrant.createdBy.toString() !== userId) {
+        throw new ApolloError("Unauthorized", "UNAUTHORIZED");
+      }
+
+      const parsedGrantDate = dayjs.utc(grantDate, "YYYY-MM-DD");
+      const parsedAmount = parseFloat(grantAmount);
+      const parsedStockPrice = parseFloat(stockPrice);
+
+      const { totalUnits, vestingSchedule, vestedUnits } =
+        calculateVestingSchedule(
+          parsedGrantDate,
+          parsedAmount,
+          parsedStockPrice
+        );
+
+      existingGrant.grantDate = parsedGrantDate.toDate();
+      existingGrant.grantAmount = parsedAmount;
+      existingGrant.stockPrice = parsedStockPrice;
+      existingGrant.totalUnits = totalUnits;
+      existingGrant.vestedUnits = vestedUnits;
+      existingGrant.vestingSchedule.splice(0);
+      vestingSchedule.forEach((item) => {
+        existingGrant.vestingSchedule.push(item);
+      });
+
+      const updated = await existingGrant.save();
+      return updated.toObject() as IRsu;
+    },
   },
   Query: {
     async myRsus(_: unknown, args: {}, ctx: any): Promise<IRsu[] | null> {

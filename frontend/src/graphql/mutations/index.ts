@@ -63,3 +63,9 @@ export const UPDATE_RSU = gql`
     }
   }
 `;
+
+export const DELETE_RSU = gql`
+  mutation DeleteRsu($id: ID!) {
+    deleteRsu(id: $id)
+  }
+`;

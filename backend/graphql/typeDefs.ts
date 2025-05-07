@@ -82,5 +82,6 @@ export const typeDefs = gql`
     loginUser(loginInput: LoginInput): AuthResponse
     createRsu(rsuInput: RsuInput): Rsu
     updateRsu(rsuInput: UpdateRsuInput): Rsu
+    deleteRsu(id: ID!): Boolean
   }
 `;

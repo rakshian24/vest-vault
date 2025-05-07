@@ -11,6 +11,8 @@ type SegmentedToggleProps<T extends string> = {
   selected: T;
   onChange: (value: T) => void;
   sx?: SxProps<Theme>;
+  bgColor?: string;
+  thumbColor?: string;
 };
 
 const CustomSegmentedToggle = <T extends string>({
@@ -18,6 +20,8 @@ const CustomSegmentedToggle = <T extends string>({
   selected,
   onChange,
   sx,
+  bgColor = colors.mediumSlateIndigo,
+  thumbColor = colors.charcoalNavy,
 }: SegmentedToggleProps<T>) => {
   return (
     <Box
@@ -25,8 +29,7 @@ const CustomSegmentedToggle = <T extends string>({
         display: "inline-flex",
         p: "4px",
         borderRadius: "999px",
-        bgcolor: colors.charcoalNavy,
-        ...sx,
+        bgcolor: thumbColor,
       }}
     >
       {options.map((option) => {
@@ -42,8 +45,9 @@ const CustomSegmentedToggle = <T extends string>({
               py: 0.8,
               minWidth: 80,
               textAlign: "center",
-              bgcolor: isSelected ? colors.mediumSlateIndigo : "transparent",
+              bgcolor: isSelected ? bgColor : "transparent",
               transition: "all 0.2s ease-in-out",
+              ...sx,
             }}
           >
             <Typography

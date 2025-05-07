@@ -17,6 +17,7 @@ import { capitalizeFirstLetter, getInitials } from "../utils";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
+import { CgFileDocument } from "react-icons/cg";
 import client from "../apolloClient";
 
 type Props = {
@@ -88,6 +89,18 @@ const ProfileTab = ({ open, anchorEl, popperRef, handleClose }: Props) => {
                 <PersonOutlined />
               </ListItemIcon>
               <ListItemText primary="Profile" />
+            </ListItemButton>
+            <Divider sx={{ my: 0.5, mx: 1 }} />
+            <ListItemButton
+              onClick={() => {
+                navigate(ROUTES.MANAGE_GRANTS);
+                handleClose();
+              }}
+            >
+              <ListItemIcon>
+                <CgFileDocument />
+              </ListItemIcon>
+              <ListItemText primary="Manage grants" />
             </ListItemButton>
             <Divider sx={{ my: 0.5, mx: 1 }} />
             <ListItemButton

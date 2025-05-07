@@ -74,7 +74,7 @@ const ManageGrantsPage = (props: Props) => {
           Your Grants
         </Typography>
         <Stack spacing={2}>
-          {rsuData.map((rsu) => {
+          {rsuData.map((rsu: IRsuData) => {
             return (
               <GrantCard
                 key={rsu._id}
@@ -82,7 +82,7 @@ const ManageGrantsPage = (props: Props) => {
                   "D MMM, YYYY"
                 )}`}
                 rsuCount={rsu.totalUnits}
-                onEdit={() => console.log("Edit 2025")}
+                onEdit={() => openGrantDialog(rsu)}
                 onDelete={() => console.log("Delete 2025")}
                 forexValue={forexValue}
                 grantAmount={rsu.grantAmount}

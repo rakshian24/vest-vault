@@ -62,6 +62,13 @@ export const typeDefs = gql`
     stockPrice: String!
   }
 
+  input UpdateRsuInput {
+    id: ID!
+    grantDate: String!
+    grantAmount: String!
+    stockPrice: String!
+  }
+
   type Query {
     me: User
     myRsus: [Rsu]
@@ -74,5 +81,6 @@ export const typeDefs = gql`
     registerUser(registerInput: RegisterInput): AuthResponse
     loginUser(loginInput: LoginInput): AuthResponse
     createRsu(rsuInput: RsuInput): Rsu
+    updateRsu(rsuInput: UpdateRsuInput): Rsu
   }
 `;

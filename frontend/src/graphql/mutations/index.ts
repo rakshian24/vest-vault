@@ -44,3 +44,22 @@ export const CREATE_RSU = gql`
     }
   }
 `;
+
+export const UPDATE_RSU = gql`
+  mutation Mutation($rsuInput: UpdateRsuInput) {
+    updateRsu(rsuInput: $rsuInput) {
+      _id
+      grantDate
+      grantAmount
+      stockPrice
+      totalUnits
+      vestedUnits
+      vestingSchedule {
+        _id
+        vestDate
+        grantedQty
+        vestedQty
+      }
+    }
+  }
+`;

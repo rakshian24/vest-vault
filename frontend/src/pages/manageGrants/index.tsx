@@ -17,7 +17,7 @@ import { useCurrency } from "../../context/currencyContext";
 type Props = {};
 
 const ManageGrantsPage = (props: Props) => {
-  const { data, loading: isRsusLoading } = useQuery(GET_MY_RSUS);
+  const { data, loading: isRsusLoading, refetch } = useQuery(GET_MY_RSUS);
   const { data: exchangeRateData, loading: isExchangeRateLoading } = useQuery(
     GET_EXCHANGE_RATE,
     {
@@ -28,8 +28,8 @@ const ManageGrantsPage = (props: Props) => {
 
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
 
-  const { openGrantDialog, setOnCreated } = useGrantDialog();
-  const { refetch } = useQuery(GET_MY_RSUS);
+  const { openGrantDialog, setOnCreated, openDeleteConfirm, setOnDeleted } =
+    useGrantDialog();
 
   if (isRsusLoading || isExchangeRateLoading) {
     return (
@@ -83,7 +83,13 @@ const ManageGrantsPage = (props: Props) => {
                 )}`}
                 rsuCount={rsu.totalUnits}
                 onEdit={() => openGrantDialog(rsu)}
-                onDelete={() => console.log("Delete 2025")}
+                onDelete={() => {
+                  setOnDeleted(() => () => refetch());
+                  openDeleteConfirm(
+                    rsu._id,
+                    dayjs(rsu.grantDate).format("D MMM, YYYY")
+                  );
+                }}
                 forexValue={forexValue}
                 grantAmount={rsu.grantAmount}
               />

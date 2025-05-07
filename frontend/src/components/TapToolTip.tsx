@@ -1,8 +1,22 @@
-import { Box, ClickAwayListener, Popper, Typography } from "@mui/material";
+import {
+  Box,
+  ClickAwayListener,
+  Popper,
+  SxProps,
+  Typography,
+} from "@mui/material";
 import { useRef, useState } from "react";
 import { colors } from "../constants";
 
-const TapTooltip = ({ value, tooltip }: { value: string; tooltip: string }) => {
+const TapTooltip = ({
+  value,
+  tooltip,
+  sx,
+}: {
+  value: string;
+  tooltip: string;
+  sx?: SxProps;
+}) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLSpanElement>(null);
 
@@ -22,7 +36,9 @@ const TapTooltip = ({ value, tooltip }: { value: string; tooltip: string }) => {
           onClick={handleClick}
           style={{ cursor: "pointer" }}
         >
-          <Typography component="span">{value}</Typography>
+          <Typography component="span" sx={{ ...sx }}>
+            {value}
+          </Typography>
         </span>
         <Popper
           open={open}

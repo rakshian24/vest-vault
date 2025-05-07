@@ -107,6 +107,30 @@ const resolvers = {
       const updated = await existingGrant.save();
       return updated.toObject() as IRsu;
     },
+    async deleteRsu(
+      _: unknown,
+      { id }: { id: string },
+      ctx: any
+    ): Promise<boolean> {
+      const loggedInUserId = getLoggedInUserId(ctx);
+      const userId = loggedInUserId?.userId;
+
+      if (!userId) {
+        throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
+      }
+
+      const rsu = await Rsu.findById(id);
+      if (!rsu) {
+        throw new ApolloError("Grant not found", "NOT_FOUND");
+      }
+
+      if (rsu.createdBy.toString() !== userId) {
+        throw new ApolloError("Unauthorized", "UNAUTHORIZED");
+      }
+
+      await rsu.deleteOne();
+      return true;
+    },
   },
   Query: {
     async myRsus(_: unknown, args: {}, ctx: any): Promise<IRsu[] | null> {

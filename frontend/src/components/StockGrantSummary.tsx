@@ -14,7 +14,12 @@ import { useRsuSummary } from "../hooks/useStockGrantSummaryHooks";
 import { BsFillBoxFill, BsGraphUpArrow, BsCalendarDate } from "react-icons/bs";
 import { RiCoinsFill } from "react-icons/ri";
 import { ImRoad } from "react-icons/im";
-import { formatCompactNumber, getUnitsInPipeline } from "../utils";
+import {
+  formatCompactNumber,
+  formatNumber,
+  getUnitsInPipeline,
+} from "../utils";
+import TapTooltip from "./TapToolTip";
 
 type Props = {
   rsuData: IRsuData[];
@@ -25,6 +30,7 @@ type Row = {
   label: string;
   value: string;
   icon?: React.ReactNode;
+  showTooltip?: boolean;
 };
 
 type StockGrantSummaryRowProps = {
@@ -32,6 +38,10 @@ type StockGrantSummaryRowProps = {
   value: string;
   sx?: SxProps;
   icon?: React.ReactNode;
+  showTooltip?: boolean;
+  tooltipValue?: number;
+  symbol?: string;
+  isUSD?: boolean;
 };
 
 const StockGrantSummaryRow = ({
@@ -39,12 +49,15 @@ const StockGrantSummaryRow = ({
   value,
   sx,
   icon,
+  showTooltip,
+  tooltipValue,
+  symbol,
+  isUSD = true,
 }: StockGrantSummaryRowProps) => (
   <Box px={3} py={2} bgcolor={"white"} sx={{ ...sx }}>
     <Stack
       direction={"row"}
       justifyContent={"space-between"}
-      display={"flex"}
       alignItems={"center"}
       sx={{ ...sx }}
     >
@@ -56,13 +69,25 @@ const StockGrantSummaryRow = ({
         {label}
       </Typography>
       <Stack direction={"row"} alignItems={"center"} gap={1.5}>
-        <Typography
-          fontWeight={600}
-          fontSize={"0.95rem"}
-          color={colors.contentSecondary}
-        >
-          {value}
-        </Typography>
+        {showTooltip && tooltipValue !== undefined && symbol ? (
+          <TapTooltip
+            value={`${symbol} ${formatCompactNumber(tooltipValue, isUSD)}`}
+            tooltip={`${symbol} ${formatNumber(tooltipValue, isUSD)}`}
+            sx={{
+              fontWeight: "600",
+              fontSize: "0.95rem",
+              color: colors.contentSecondary,
+            }}
+          />
+        ) : (
+          <Typography
+            fontWeight={600}
+            fontSize={"0.95rem"}
+            color={colors.contentSecondary}
+          >
+            {value}
+          </Typography>
+        )}
         {icon}
       </Stack>
     </Stack>
@@ -89,11 +114,13 @@ const StockGrantSummary = ({ rsuData, forexStockPrice }: Props) => {
         isUSD
       )}`,
       icon: <RiCoinsFill color={colors.mediumSlateIndigo} />,
+      showTooltip: true,
     },
     {
       label: "Annual Vesting Income",
       value: `${symbol} ${formatCompactNumber(annualIncome, isUSD)}`,
       icon: <BsGraphUpArrow color={colors.mediumSlateIndigo} />,
+      showTooltip: true,
     },
     {
       label: "Next Vesting Date",
@@ -133,6 +160,16 @@ const StockGrantSummary = ({ rsuData, forexStockPrice }: Props) => {
               label={row.label}
               value={row.value}
               icon={row.icon}
+              showTooltip={row.showTooltip}
+              tooltipValue={
+                row.label === "Est. Value"
+                  ? unvestedUnits * forexStockPrice
+                  : row.label === "Annual Vesting Income"
+                  ? annualIncome
+                  : undefined
+              }
+              symbol={symbol}
+              isUSD={isUSD}
               sx={
                 idx === rows.length - 1
                   ? {

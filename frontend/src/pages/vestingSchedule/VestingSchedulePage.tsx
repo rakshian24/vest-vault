@@ -24,7 +24,7 @@ import {
   grantYearColorPaletteForMobile,
   ROUTES,
 } from "../../constants";
-import { formatNumber } from "../../utils";
+import { formatCompactNumber, formatNumber } from "../../utils";
 import { useQuery } from "@apollo/client";
 import {
   GET_EXCHANGE_RATE,
@@ -40,6 +40,7 @@ import NoGrants from "../dashboard/components/NoGrants";
 import CustomSegmentedToggle, {
   CustomSegmentedToggleOption,
 } from "../../components/CustomSegmentedToggle";
+import TapTooltip from "../../components/TapToolTip";
 
 const VestingSchedulePage = () => {
   const [viewMode, setViewMode] = useState<"all" | "grant">("all");
@@ -426,30 +427,38 @@ const VestingSchedulePage = () => {
                             direction={"row"}
                             display="flex"
                             alignItems={"center"}
-                            mr={2}
-                            gap={0.5}
+                            mr={2.5}
+                            gap={0.75}
                           >
                             <FaMoneyBillWave />
-                            <Typography>
-                              {`${symbol} ${formatNumber(
+                            <TapTooltip
+                              value={`${symbol} ${formatCompactNumber(
                                 rsu.grantAmount * forexValue,
                                 isUSD
                               )}`}
-                            </Typography>
+                              tooltip={`${symbol} ${formatNumber(
+                                rsu.grantAmount * forexValue,
+                                isUSD
+                              )}`}
+                            />
                           </Stack>
                           <Stack
                             direction={"row"}
                             display="flex"
                             alignItems={"center"}
-                            gap={0.5}
+                            gap={0.75}
                           >
                             <FaTag />
-                            <Typography>
-                              {`${symbol} ${formatNumber(
+                            <TapTooltip
+                              value={`${symbol} ${formatCompactNumber(
                                 rsu.stockPrice * forexValue,
                                 isUSD
                               )}`}
-                            </Typography>
+                              tooltip={`${symbol} ${formatNumber(
+                                rsu.stockPrice * forexValue,
+                                isUSD
+                              )}`}
+                            />
                           </Stack>
                         </Stack>
                       </Stack>

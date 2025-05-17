@@ -53,8 +53,8 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
 }) => {
   const { isUSD, symbol } = useCurrency();
 
-  const fontSize = showWithHikeComparison ? "13.9px" : "14px";
-  const px = showWithHikeComparison ? "8px" : "16px";
+  const fontSize = showWithHikeComparison ? "13px" : "14px";
+  const px = showWithHikeComparison ? "4px" : "16px";
 
   return (
     <Box
@@ -87,7 +87,7 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
           <TableBody>
             {rows.map((row, idx) => (
               <TableRow key={idx}>
-                <TableCell sx={{ px }}>{row.label}</TableCell>
+                <TableCell sx={{ px, fontSize }}>{row.label}</TableCell>
                 <TableCell align="right" sx={{ fontSize, px }}>
                   {`${symbol} ${formatNumber(row.oldValue, isUSD)}`}
                 </TableCell>
@@ -100,7 +100,7 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
             ))}
             {!isPeriodMonthly && employerPF && employerPFForHike && (
               <TableRow>
-                <TableCell sx={{ px }}>{"Employer PF"}</TableCell>
+                <TableCell sx={{ px, fontSize }}>{"Employer PF"}</TableCell>
                 <TableCell align="right" sx={{ fontSize, px }}>
                   {`${symbol} ${formatNumber(employerPF, isUSD)}`}
                 </TableCell>
@@ -112,7 +112,7 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
               </TableRow>
             )}
             <TableRow>
-              <TableCell sx={{ fontWeight: 600, px }}>{totalLabel}</TableCell>
+              <TableCell sx={{ fontWeight: 600, px, fontSize }}>{totalLabel}</TableCell>
               <TableCell align="right" sx={{ fontWeight: 600, fontSize, px }}>
                 {`${symbol} ${totalOld}`}
               </TableCell>
@@ -309,7 +309,7 @@ const EarningsDeductionTable = ({
           >
             <Stack>
               <Typography
-                fontSize={"1.5rem"}
+                fontSize={"1.25rem"}
                 fontWeight={600}
                 color={colors.white}
               >{`${symbol} ${formattedNetPay}`}</Typography>
@@ -317,7 +317,7 @@ const EarningsDeductionTable = ({
             </Stack>
             <Stack>
               <Typography
-                fontSize={"1.5rem"}
+                fontSize={"1.25rem"}
                 fontWeight={600}
                 color={colors.white}
               >{`${symbol} ${formattedNetPayForHike}`}</Typography>
@@ -326,7 +326,7 @@ const EarningsDeductionTable = ({
           </Stack>
         ) : (
           <Typography
-            fontSize={"1.5rem"}
+            fontSize={"1.25rem"}
             fontWeight={600}
             color={colors.white}
           >{`${symbol} ${formattedNetPay}`}</Typography>

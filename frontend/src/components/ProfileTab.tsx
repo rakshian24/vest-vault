@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
 import { CgFileDocument } from "react-icons/cg";
 import client from "../apolloClient";
+import { FaCalculator } from "react-icons/fa6";
 
 type Props = {
   open: boolean;
@@ -101,6 +102,18 @@ const ProfileTab = ({ open, anchorEl, popperRef, handleClose }: Props) => {
                 <CgFileDocument />
               </ListItemIcon>
               <ListItemText primary="Manage grants" />
+            </ListItemButton>
+            <Divider sx={{ my: 0.5, mx: 1 }} />
+            <ListItemButton
+              onClick={() => {
+                navigate(ROUTES.PAYLENS);
+                handleClose();
+              }}
+            >
+              <ListItemIcon>
+                <FaCalculator />
+              </ListItemIcon>
+              <ListItemText primary="Paylens" />
             </ListItemButton>
             <Divider sx={{ my: 0.5, mx: 1 }} />
             <ListItemButton

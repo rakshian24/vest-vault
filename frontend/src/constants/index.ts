@@ -14,6 +14,7 @@ export const ROUTES = {
   PROFILE: "/profile",
   VESTING_SCHEDULE: "/vesting-schedule",
   MANAGE_GRANTS: "/manage-grants",
+  PAYLENS: "/paylens",
 };
 
 export const colors = {
@@ -60,7 +61,8 @@ export const colors = {
   skyBlue: "#4299E1",
   amber: "#F59E0B",
   amberLight: "#F59E0B1A",
-  lightGrayishBlue: "#E0E7ED"
+  lightGrayishBlue: "#E0E7ED",
+  slate700: "#334155"
 };
 
 export const ISO_DATE_FORMAT = "DD-MMM-YYYY";
@@ -92,3 +94,6 @@ export const grantYearColorPaletteForMobile = [
   "#14B8A6", // Teal
   "#BE185D", // Pinkish Red
 ];
+
+export const MAX_FIXED_PAY = 100000000;
+export const MAX_HIKE_PERCENTAGE = 500;

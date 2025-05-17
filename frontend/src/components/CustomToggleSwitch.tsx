@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControlLabel, Switch } from "@mui/material";
+import { FormControlLabel, Switch, SxProps } from "@mui/material";
 import { colors } from "../constants";
 
 interface CustomToggleSwitchProps {
@@ -9,6 +9,8 @@ interface CustomToggleSwitchProps {
   labelPosition?: "start" | "end";
   offStateColor?: string;
   onStateColor?: string;
+  switchSx?: SxProps;
+  labelSx?: SxProps;
 }
 
 const CustomToggleSwitch: React.FC<CustomToggleSwitchProps> = ({
@@ -18,6 +20,8 @@ const CustomToggleSwitch: React.FC<CustomToggleSwitchProps> = ({
   labelPosition = "start",
   offStateColor = colors.white,
   onStateColor = colors.green,
+  switchSx,
+  labelSx,
 }) => {
   return (
     <FormControlLabel
@@ -41,6 +45,7 @@ const CustomToggleSwitch: React.FC<CustomToggleSwitchProps> = ({
             "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
               backgroundColor: onStateColor,
             },
+            ...switchSx,
           }}
         />
       }
@@ -51,6 +56,7 @@ const CustomToggleSwitch: React.FC<CustomToggleSwitchProps> = ({
         ".MuiFormControlLabel-label": {
           fontWeight: 500,
         },
+        ...labelSx,
       }}
     />
   );

@@ -12,6 +12,7 @@ import client from "./apolloClient";
 import { AuthProvider } from "./context/authContext";
 import { CurrencyProvider } from "./context/currencyContext";
 import { GrantDialogProvider } from "./context/GrantDialogContext";
+import { SnackbarProvider } from "./context/SnackbarContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,15 +20,17 @@ const root = ReactDOM.createRoot(
 root.render(
   <AuthProvider>
     <ApolloProvider client={client}>
-      <BrowserRouter>
-        <React.StrictMode>
-          <CurrencyProvider>
-            <GrantDialogProvider>
-              <App />
-            </GrantDialogProvider>
-          </CurrencyProvider>
-        </React.StrictMode>
-      </BrowserRouter>
+      <SnackbarProvider>
+        <BrowserRouter>
+          <React.StrictMode>
+            <CurrencyProvider>
+              <GrantDialogProvider>
+                <App />
+              </GrantDialogProvider>
+            </CurrencyProvider>
+          </React.StrictMode>
+        </BrowserRouter>
+      </SnackbarProvider>
     </ApolloProvider>
   </AuthProvider>
 );

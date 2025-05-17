@@ -18,7 +18,7 @@ import {
 import { CREATE_RSU, UPDATE_RSU } from "../../../graphql/mutations";
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
-import CustomSnackBar from "../../../components/CustomSnackBar";
+import { useSnackbar } from "../../../context/SnackbarContext";
 import ErrorBox from "../../../components/ErrorBox";
 import Button from "../../../components/CustomButton";
 import CustomDatePicker from "../../../components/CustomDatePicker";
@@ -41,11 +41,7 @@ const AddGrantDialog = ({
   grantToEdit,
 }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
-  );
+  const { showSuccess, showError } = useSnackbar();
 
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
 
@@ -96,9 +92,7 @@ const AddGrantDialog = ({
           },
         });
 
-        setSnackbarMessage("Grant updated successfully!");
-        setSnackbarSeverity("success");
-        setSnackbarOpen(true);
+        showSuccess("Grant updated successfully!");
       } else {
         await createRsu({
           variables: {
@@ -109,9 +103,7 @@ const AddGrantDialog = ({
           },
         });
 
-        setSnackbarMessage("Grant created successfully!");
-        setSnackbarSeverity("success");
-        setSnackbarOpen(true);
+        showSuccess("Grant created successfully!");
       }
 
       onGrantCreated();
@@ -123,32 +115,14 @@ const AddGrantDialog = ({
     } catch (error) {
       console.error("Error while creating todo: ", error);
 
-      setSnackbarMessage("Something went wrong!");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      showError("Something went wrong!");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-
   return (
     <>
-      <CustomSnackBar
-        open={snackbarOpen}
-        onClose={handleCloseSnackbar}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-      />
       <Dialog
         fullScreen={isTablet}
         fullWidth

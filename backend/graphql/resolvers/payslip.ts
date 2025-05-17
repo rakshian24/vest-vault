@@ -2,6 +2,7 @@ import { ApolloError } from "apollo-server-errors";
 import getLoggedInUserId from "../../middleware/getLoggedInUserId";
 import Payslip, { IPayslip } from "../../models/Payslip";
 import dayjs from "dayjs";
+import { GraphQLError } from "graphql";
 
 const payslipResolvers = {
   Mutation: {
@@ -33,7 +34,31 @@ const payslipResolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
+      console.log("payslipDatepayslipDate = ", payslipDate);
+
       const parsedDate = dayjs(payslipDate, "MMMM YYYY").toDate();
+
+      // Check if a payslip for this month already exists for this user
+      const existing = await Payslip.findOne({
+        uploadedBy: userId,
+        payslipDate: {
+          $gte: dayjs(parsedDate).startOf("month").toDate(),
+          $lt: dayjs(parsedDate).endOf("month").toDate(),
+        },
+      });
+
+      if (existing) {
+        throw new GraphQLError(
+          `A payslip for ${dayjs(parsedDate).format(
+            "MMMM YYYY"
+          )} has already been uploaded. Please upload a payslip for a different month.`,
+          {
+            extensions: {
+              code: "DUPLICATE_PAYSLIP",
+            },
+          }
+        );
+      }
 
       const newPayslip = new Payslip({
         payslipDate: parsedDate,

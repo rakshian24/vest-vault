@@ -12,10 +12,12 @@ import { NavLink } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa6";
 import { usePayslipOCR } from "../../hooks/usePayslipOCR";
 import { CREATE_PAYSLIP } from "../../graphql/mutations";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const MyEarnings = () => {
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
   const { isUSD } = useCurrency();
+  const { showSuccess, showError } = useSnackbar();
 
   const { extractPayslipData } = usePayslipOCR();
   const [createPayslip] = useMutation(CREATE_PAYSLIP);
@@ -71,10 +73,17 @@ const MyEarnings = () => {
           },
         },
       });
+      showSuccess("Payslip uploaded successfully!");
 
       refetch();
-    } catch (err) {
-      console.error("Upload failed:", err);
+    } catch (err: any) {
+      const code = err?.graphQLErrors?.[0]?.extensions?.code;
+      const message = err?.graphQLErrors?.[0]?.message || "Upload failed.";
+      if (code === "DUPLICATE_PAYSLIP") {
+        showError(message);
+      } else {
+        showError("Something went wrong while uploading the payslip.");
+      }
     }
   };
 

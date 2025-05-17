@@ -12,6 +12,7 @@ import Profile from "./pages/profile";
 import VestingSchedulePage from "./pages/vestingSchedule/VestingSchedulePage";
 import ManageGrantsPage from "./pages/manageGrants";
 import PayLensPage from "./pages/paylens";
+import MyEarnings from "./pages/myEarnings";
 
 function App() {
   const { user, isLoggedIn } = useAuth();
@@ -27,6 +28,7 @@ function App() {
     VESTING_SCHEDULE,
     MANAGE_GRANTS,
     PAYLENS,
+    MY_EARNINGS,
   } = ROUTES;
 
   return (
@@ -73,6 +75,7 @@ function App() {
                 />
                 <Route element={<ManageGrantsPage />} path={MANAGE_GRANTS} />
                 <Route element={<PayLensPage />} path={PAYLENS} />
+                <Route element={<MyEarnings />} path={MY_EARNINGS} />
               </Route>
             </Routes>
           </Stack>

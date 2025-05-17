@@ -20,6 +20,7 @@ import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
 import { CgFileDocument } from "react-icons/cg";
 import client from "../apolloClient";
 import { FaCalculator } from "react-icons/fa6";
+import { PiCurrencyInrFill } from "react-icons/pi";
 
 type Props = {
   open: boolean;
@@ -99,9 +100,9 @@ const ProfileTab = ({ open, anchorEl, popperRef, handleClose }: Props) => {
               }}
             >
               <ListItemIcon>
-                <CgFileDocument />
+                <CgFileDocument fontSize={18} />
               </ListItemIcon>
-              <ListItemText primary="Manage grants" />
+              <ListItemText primary="Manage Grants" />
             </ListItemButton>
             <Divider sx={{ my: 0.5, mx: 1 }} />
             <ListItemButton
@@ -111,9 +112,21 @@ const ProfileTab = ({ open, anchorEl, popperRef, handleClose }: Props) => {
               }}
             >
               <ListItemIcon>
-                <FaCalculator />
+                <FaCalculator fontSize={18} />
               </ListItemIcon>
               <ListItemText primary="Paylens" />
+            </ListItemButton>
+            <Divider sx={{ my: 0.5, mx: 1 }} />
+            <ListItemButton
+              onClick={() => {
+                navigate(ROUTES.MY_EARNINGS);
+                handleClose();
+              }}
+            >
+              <ListItemIcon>
+                <PiCurrencyInrFill fontSize={20} />
+              </ListItemIcon>
+              <ListItemText primary="My Earnings" />
             </ListItemButton>
             <Divider sx={{ my: 0.5, mx: 1 }} />
             <ListItemButton

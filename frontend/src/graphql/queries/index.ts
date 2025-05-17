@@ -47,3 +47,17 @@ export const GET_EXCHANGE_RATE = gql`
     }
   }
 `;
+
+export const GET_MY_PAYSLIPS = gql`
+  query {
+    myPayslips {
+      _id
+      payslipDate
+      totalEarnings
+      totalDeductions
+      netPay
+      createdAt
+      updatedAt
+    }
+  }
+`;

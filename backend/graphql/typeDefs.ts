@@ -69,12 +69,33 @@ export const typeDefs = gql`
     stockPrice: String!
   }
 
+  type Payslip {
+    _id: ID!
+    payslipDate: Date!
+    extractedText: String!
+    totalEarnings: Float!
+    totalDeductions: Float!
+    netPay: Float!
+    uploadedBy: ID!
+    createdAt: Date!
+    updatedAt: Date!
+  }
+
+  input PayslipInput {
+    payslipDate: String!
+    extractedText: String!
+    totalEarnings: Float!
+    totalDeductions: Float!
+    netPay: Float!
+  }
+
   type Query {
     me: User
     myRsus: [Rsu]
     user(id: ID!): User
     getStockPrice(symbol: String!): StockPrice
     getExchangeRate: ExchangeRate
+    myPayslips: [Payslip!]!
   }
 
   type Mutation {
@@ -83,5 +104,6 @@ export const typeDefs = gql`
     createRsu(rsuInput: RsuInput): Rsu
     updateRsu(rsuInput: UpdateRsuInput): Rsu
     deleteRsu(id: ID!): Boolean
+    createPayslip(payslipInput: PayslipInput!): Payslip!
   }
 `;

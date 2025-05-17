@@ -15,6 +15,7 @@ export const ROUTES = {
   VESTING_SCHEDULE: "/vesting-schedule",
   MANAGE_GRANTS: "/manage-grants",
   PAYLENS: "/paylens",
+  MY_EARNINGS: "/my-earnings",
 };
 
 export const colors = {

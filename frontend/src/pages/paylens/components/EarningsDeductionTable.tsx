@@ -52,9 +52,14 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
   employerPFForHike,
 }) => {
   const { isUSD, symbol } = useCurrency();
+  const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
 
-  const fontSize = showWithHikeComparison ? "13px" : "14px";
-  const px = showWithHikeComparison ? "4px" : "16px";
+  const fontSize = !isTablet
+    ? "16px"
+    : showWithHikeComparison
+    ? "13px"
+    : "14px";
+  const px = !isTablet ? "16px" : showWithHikeComparison ? "4px" : "16px";
 
   return (
     <Box
@@ -62,8 +67,9 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
       boxShadow="0 4px 20px rgba(0,0,0,0.08)"
       bgcolor="#fff"
       overflow="hidden"
-      px={1}
+      px={isTablet ? 1 : 2}
       py={2}
+      width={!isTablet ? "100%" : "auto"}
     >
       <Stack direction="row" alignItems="center" spacing={1} mb={0.5}>
         <Box>{icon}</Box>
@@ -112,7 +118,9 @@ const PayBreakdownSection: React.FC<PayBreakdownSectionProps> = ({
               </TableRow>
             )}
             <TableRow>
-              <TableCell sx={{ fontWeight: 600, px, fontSize }}>{totalLabel}</TableCell>
+              <TableCell sx={{ fontWeight: 600, px, fontSize }}>
+                {totalLabel}
+              </TableCell>
               <TableCell align="right" sx={{ fontWeight: 600, fontSize, px }}>
                 {`${symbol} ${totalOld}`}
               </TableCell>
@@ -253,49 +261,58 @@ const EarningsDeductionTable = ({
     showWithHikeComparison && !!salaryBreakdownForHike;
 
   return (
-    <Stack gap={2} mt={1}>
-      <PayBreakdownSection
-        title="Earnings"
-        icon={
-          <FaMoneyBillWave
-            color={colors.green1}
-            fontSize={"20px"}
-            style={{ marginTop: "4px" }}
-          />
-        }
-        rows={earnings}
-        totalLabel="Total Earnings"
-        totalOld={formattedTotalEarnings}
-        totalNew={formattedTotalEarningsForHike}
-        showWithHikeComparison={safeShowWithHikeComparison}
-        isPeriodMonthly={isPeriodMonthly}
-        employerPF={salaryBreakdown.annualEmployerPf}
-        employerPFForHike={salaryBreakdownForHike?.annualEmployerPf || 0}
-      />
+    <Stack gap={isTablet ? 2 : 3}>
+      <Stack
+        gap={2}
+        mt={isTablet ? 1 : 0}
+        direction={isTablet ? "column" : "row"}
+        width={"100%"}
+      >
+        <PayBreakdownSection
+          title="Earnings"
+          icon={
+            <FaMoneyBillWave
+              color={colors.green1}
+              fontSize={"20px"}
+              style={{ marginTop: "4px" }}
+            />
+          }
+          rows={earnings}
+          totalLabel="Total Earnings"
+          totalOld={formattedTotalEarnings}
+          totalNew={formattedTotalEarningsForHike}
+          showWithHikeComparison={safeShowWithHikeComparison}
+          isPeriodMonthly={isPeriodMonthly}
+          employerPF={salaryBreakdown.annualEmployerPf}
+          employerPFForHike={salaryBreakdownForHike?.annualEmployerPf || 0}
+        />
 
-      <PayBreakdownSection
-        title="Deductions"
-        icon={
-          <FaMinusCircle
-            color={colors.red}
-            fontSize={"20px"}
-            style={{ marginTop: "4px" }}
-          />
-        }
-        rows={deductions}
-        totalLabel="Total Deductions"
-        totalOld={formattedTotalDeductions}
-        totalNew={formattedTotalDeductionsForHike}
-        showWithHikeComparison={safeShowWithHikeComparison}
-        isPeriodMonthly={isPeriodMonthly}
-      />
-
+        <PayBreakdownSection
+          title="Deductions"
+          icon={
+            <FaMinusCircle
+              color={colors.red}
+              fontSize={"20px"}
+              style={{ marginTop: "4px" }}
+            />
+          }
+          rows={deductions}
+          totalLabel="Total Deductions"
+          totalOld={formattedTotalDeductions}
+          totalNew={formattedTotalDeductionsForHike}
+          showWithHikeComparison={safeShowWithHikeComparison}
+          isPeriodMonthly={isPeriodMonthly}
+        />
+      </Stack>
       <Stack
         bgcolor={colors.slate700}
         px={2}
         py={1.5}
         borderRadius={3}
         textAlign={"center"}
+        direction={isTablet ? "column" : "row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
       >
         <Typography color={colors.white} fontSize={"1rem"}>
           Net In-Hand
@@ -304,8 +321,10 @@ const EarningsDeductionTable = ({
           <Stack
             display={"flex"}
             direction={"row"}
-            justifyContent={"space-between"}
+            justifyContent={isTablet ? "space-between" : "flex-end"}
             alignItems={"center"}
+            gap={isTablet ? 0 : 5}
+            width={isTablet ? "100%" : "auto"}
           >
             <Stack>
               <Typography

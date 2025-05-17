@@ -11,6 +11,7 @@ type SegmentedToggleProps<T extends string> = {
   selected: T;
   onChange: (value: T) => void;
   sx?: SxProps<Theme>;
+  wrapperSx?: SxProps<Theme>;
   bgColor?: string;
   thumbColor?: string;
 };
@@ -22,6 +23,7 @@ const CustomSegmentedToggle = <T extends string>({
   sx,
   bgColor = colors.mediumSlateIndigo,
   thumbColor = colors.charcoalNavy,
+  wrapperSx,
 }: SegmentedToggleProps<T>) => {
   return (
     <Box
@@ -30,6 +32,7 @@ const CustomSegmentedToggle = <T extends string>({
         p: "4px",
         borderRadius: "999px",
         bgcolor: thumbColor,
+        ...wrapperSx,
       }}
     >
       {options.map((option) => {

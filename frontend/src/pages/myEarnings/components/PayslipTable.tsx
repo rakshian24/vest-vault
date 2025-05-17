@@ -43,24 +43,27 @@ const PayslipTable = ({
 }: Props) => {
   const { isUSD, symbol } = useCurrency();
 
-  const centeredCell = { fontSize: "16px", textAlign: "center" };
+  const centeredCell = {
+    fontSize: "16px",
+    textAlign: "center",
+    color: colors.white,
+  };
 
   return (
     <TableContainer
       component={Paper}
       sx={{
-        mt: 3,
         borderRadius: 2,
         boxShadow: 2,
       }}
     >
       <Table>
-        <TableHead>
+        <TableHead sx={{ bgcolor: colors.charcoalNavy }}>
           <TableRow>
             <TableCell sx={centeredCell}>Action</TableCell>
             <TableCell sx={centeredCell}>Payslip Date</TableCell>
-            <TableCell sx={centeredCell}>Total Earnings</TableCell>
-            <TableCell sx={centeredCell}>Total Deductions</TableCell>
+            <TableCell sx={centeredCell}>Earnings</TableCell>
+            <TableCell sx={centeredCell}>Deductions</TableCell>
             <TableCell sx={centeredCell}>Net Pay</TableCell>
           </TableRow>
         </TableHead>

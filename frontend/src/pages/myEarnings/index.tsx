@@ -13,6 +13,7 @@ import { FaChevronLeft } from "react-icons/fa6";
 import { usePayslipOCR } from "../../hooks/usePayslipOCR";
 import { CREATE_PAYSLIP, DELETE_PAYSLIP } from "../../graphql/mutations";
 import { useSnackbar } from "../../context/SnackbarContext";
+import PayslipCards from "./components/PayslipCards";
 
 const MyEarnings = () => {
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
@@ -109,7 +110,7 @@ const MyEarnings = () => {
   };
 
   return (
-    <Stack spacing={isTablet ? 2 : 4}>
+    <Stack gap={isTablet ? 2 : 3}>
       <Stack direction={"row"} spacing={2} alignItems={"center"} mb={1}>
         <NavLink to={ROUTES.DASHBOARD}>
           <FaChevronLeft color={colors.contentTertiary} fontSize={"1.2rem"} />
@@ -122,12 +123,23 @@ const MyEarnings = () => {
       {payslipsData.length > 0 && <UploadPayslipForm onUpload={handleUpload} />}
 
       {payslipsData.length > 0 ? (
-        <PayslipTable
-          payslips={payslipsData}
-          onDelete={handleDelete}
-          forexValue={forexValue}
-          aggregateData={aggregateData}
-        />
+        <>
+          {isTablet ? (
+            <PayslipCards
+              payslips={payslipsData}
+              onDelete={handleDelete}
+              forexValue={forexValue}
+              aggregateData={aggregateData}
+            />
+          ) : (
+            <PayslipTable
+              payslips={payslipsData}
+              onDelete={handleDelete}
+              forexValue={forexValue}
+              aggregateData={aggregateData}
+            />
+          )}
+        </>
       ) : (
         <NoPayslips handleUpload={handleUpload} />
       )}

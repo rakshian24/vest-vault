@@ -8,10 +8,7 @@ interface DecodedToken extends JwtPayload {
 }
 
 const getLoggedInUserId = (context: any): DecodedToken => {
-  const authHeader: string =
-    context?.req?.headers?.authorization ||
-    context?.headers?.authorization ||
-    "";
+  const authHeader: string = context.req.headers.authorization || "";
 
   const token = authHeader.startsWith("Bearer ")
     ? authHeader.split(" ")[1]

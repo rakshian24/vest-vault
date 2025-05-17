@@ -1,21 +1,24 @@
 import { Stack, Typography } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
-import { useAuth } from "../../context/authContext";
 import { colors, ROUTES, screenSize } from "../../constants";
 import UploadPayslipForm from "./components/UploadPayslipForm";
 import PayslipTable from "./components/PayslipTable";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_EXCHANGE_RATE, GET_MY_PAYSLIPS } from "../../graphql/queries";
 import CommonSkeleton from "../../components/CommonSkeleton";
 import { useCurrency } from "../../context/currencyContext";
 import NoPayslips from "./components/NoPayslips";
 import { NavLink } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa6";
+import { usePayslipOCR } from "../../hooks/usePayslipOCR";
+import { CREATE_PAYSLIP } from "../../graphql/mutations";
 
 const MyEarnings = () => {
-  const { token } = useAuth();
   const isTablet = useMediaQuery(`(max-width:${screenSize.tablet})`);
   const { isUSD } = useCurrency();
+
+  const { extractPayslipData } = usePayslipOCR();
+  const [createPayslip] = useMutation(CREATE_PAYSLIP);
 
   const {
     data,
@@ -41,26 +44,37 @@ const MyEarnings = () => {
   const payslipsData = data?.myPayslips || [];
 
   const handleUpload = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
+    const parsed = await extractPayslipData(file);
+
+    if (!parsed) {
+      console.error("Failed to extract payslip data");
+      return;
+    }
+
+    const {
+      extractedText,
+      totalEarnings,
+      totalDeductions,
+      netPay,
+      payslipMonth,
+    } = parsed;
 
     try {
-      const response = await fetch("/api/upload-payslip", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await createPayslip({
+        variables: {
+          payslipInput: {
+            payslipDate: payslipMonth,
+            extractedText,
+            totalEarnings,
+            totalDeductions,
+            netPay,
+          },
         },
-        body: formData,
       });
 
-      const data = await response.json();
-      if (data.success) {
-        refetch();
-      } else {
-        console.error("Upload failed:", data.error);
-      }
+      refetch();
     } catch (err) {
-      console.error("Upload error:", err);
+      console.error("Upload failed:", err);
     }
   };
 

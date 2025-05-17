@@ -19,7 +19,6 @@ interface AuthContextProps {
   storeTokenInLS: (serverToken: string) => void;
   logoutUser: () => void;
   user: User | null;
-  token: string;
 }
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
@@ -62,7 +61,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         storeTokenInLS,
         logoutUser,
         user,
-        token,
       }}
     >
       {children}

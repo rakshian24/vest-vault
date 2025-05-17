@@ -69,3 +69,17 @@ export const DELETE_RSU = gql`
     deleteRsu(id: $id)
   }
 `;
+
+export const CREATE_PAYSLIP = gql`
+  mutation CreatePayslip($payslipInput: PayslipInput!) {
+    createPayslip(payslipInput: $payslipInput) {
+      _id
+      payslipDate
+      totalEarnings
+      totalDeductions
+      netPay
+      createdAt
+      updatedAt
+    }
+  }
+`;

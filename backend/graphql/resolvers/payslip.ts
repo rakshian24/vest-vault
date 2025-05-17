@@ -34,8 +34,6 @@ const payslipResolvers = {
         throw new ApolloError("User not authenticated", "NOT_AUTHENTICATED");
       }
 
-      console.log("payslipDatepayslipDate = ", payslipDate);
-
       const parsedDate = dayjs(payslipDate, "MMMM YYYY").toDate();
 
       // Check if a payslip for this month already exists for this user
@@ -73,10 +71,47 @@ const payslipResolvers = {
 
       return res;
     },
+    async deletePayslip(
+      _: unknown,
+      { id }: { id: string },
+      ctx: any
+    ): Promise<boolean> {
+      const loggedInUserId = getLoggedInUserId(ctx);
+      const userId = loggedInUserId?.userId;
+
+      if (!userId) {
+        throw new GraphQLError("User not authenticated", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const payslip = await Payslip.findById(id);
+
+      if (!payslip) {
+        throw new GraphQLError("Payslip not found", {
+          extensions: {
+            code: "NOT_FOUND",
+          },
+        });
+      }
+
+      if (payslip.uploadedBy.toString() !== userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+
+      await payslip.deleteOne();
+      return true;
+    },
   },
 
   Query: {
-    async myPayslips(_: unknown, args: {}, ctx: any): Promise<IPayslip[]> {
+    async myPayslips(_: unknown, args: {}, ctx: any) {
       const loggedInUserId = getLoggedInUserId(ctx);
       const userId = loggedInUserId?.userId;
 
@@ -88,7 +123,26 @@ const payslipResolvers = {
         payslipDate: -1,
       });
 
-      return payslips.map((p) => p.toObject()) as IPayslip[];
+      const payslipList = payslips.map((p) => p.toObject());
+
+      const totalEarnings = payslipList
+        .reduce((acc, p) => acc + (p.totalEarnings || 0), 0)
+        .toFixed(2);
+
+      const totalDeductions = payslipList
+        .reduce((acc, p) => acc + (p.totalDeductions || 0), 0)
+        .toFixed(2);
+
+      const totalNetpay = (+totalEarnings - +totalDeductions).toFixed(2);
+
+      return {
+        myPayslips: payslipList,
+        aggregate: {
+          totalEarnings: +totalEarnings,
+          totalDeductions: +totalDeductions,
+          totalNetpay: +totalNetpay,
+        },
+      };
     },
   },
 };

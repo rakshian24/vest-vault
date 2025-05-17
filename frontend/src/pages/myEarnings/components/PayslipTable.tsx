@@ -11,6 +11,7 @@ import ActionCell from "./ActionCell";
 import dayjs from "dayjs";
 import { useCurrency } from "../../../context/currencyContext";
 import { formatNumber } from "../../../utils";
+import { colors } from "../../../constants";
 
 export type Payslip = {
   _id: string;
@@ -21,14 +22,25 @@ export type Payslip = {
   netPay: number;
 };
 
-type Props = {
-  payslips: Payslip[];
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-  forexValue: number;
+export type PayslipAggregate = {
+  totalEarnings: number;
+  totalDeductions: number;
+  totalNetpay: number;
 };
 
-const PayslipTable = ({ payslips, onEdit, onDelete, forexValue }: Props) => {
+type Props = {
+  payslips: Payslip[];
+  onDelete: (id: string) => void;
+  forexValue: number;
+  aggregateData: PayslipAggregate;
+};
+
+const PayslipTable = ({
+  payslips,
+  onDelete,
+  forexValue,
+  aggregateData,
+}: Props) => {
   const { isUSD, symbol } = useCurrency();
 
   const centeredCell = { fontSize: "16px", textAlign: "center" };
@@ -56,10 +68,7 @@ const PayslipTable = ({ payslips, onEdit, onDelete, forexValue }: Props) => {
           {payslips.map((payslip) => (
             <TableRow key={payslip._id}>
               <TableCell align="center">
-                <ActionCell
-                  onEdit={() => onEdit(payslip._id)}
-                  onDelete={() => onDelete(payslip._id)}
-                />
+                <ActionCell onDelete={() => onDelete(payslip._id)} />
               </TableCell>
               <TableCell align="center">
                 {dayjs(payslip.payslipDate).format("MMMM, YYYY")}
@@ -84,6 +93,42 @@ const PayslipTable = ({ payslips, onEdit, onDelete, forexValue }: Props) => {
               </TableCell>
             </TableRow>
           ))}
+          <TableRow sx={{ bgcolor: colors.mediumSlateIndigo2 }}>
+            <TableCell
+              align="center"
+              colSpan={2}
+              sx={{ fontWeight: 600, fontSize: "16px", color: colors.white }}
+            >
+              TOTAL
+            </TableCell>
+            <TableCell
+              align="center"
+              sx={{ fontWeight: 600, fontSize: "16px", color: colors.white }}
+            >
+              {`${symbol} ${formatNumber(
+                aggregateData.totalEarnings * forexValue,
+                isUSD
+              )}`}
+            </TableCell>
+            <TableCell
+              align="center"
+              sx={{ fontWeight: 600, fontSize: "16px", color: colors.white }}
+            >
+              {`${symbol} ${formatNumber(
+                aggregateData.totalDeductions * forexValue,
+                isUSD
+              )}`}
+            </TableCell>
+            <TableCell
+              align="center"
+              sx={{ fontWeight: 600, fontSize: "16px", color: colors.white }}
+            >
+              {`${symbol} ${formatNumber(
+                aggregateData.totalNetpay * forexValue,
+                isUSD
+              )}`}
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

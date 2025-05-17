@@ -11,7 +11,7 @@ import NoPayslips from "./components/NoPayslips";
 import { NavLink } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa6";
 import { usePayslipOCR } from "../../hooks/usePayslipOCR";
-import { CREATE_PAYSLIP } from "../../graphql/mutations";
+import { CREATE_PAYSLIP, DELETE_PAYSLIP } from "../../graphql/mutations";
 import { useSnackbar } from "../../context/SnackbarContext";
 
 const MyEarnings = () => {
@@ -21,6 +21,7 @@ const MyEarnings = () => {
 
   const { extractPayslipData } = usePayslipOCR();
   const [createPayslip] = useMutation(CREATE_PAYSLIP);
+  const [deletePayslip] = useMutation(DELETE_PAYSLIP);
 
   const {
     data,
@@ -43,12 +44,20 @@ const MyEarnings = () => {
   const usdToInrValue = exchangeRateData?.getExchangeRate?.usdToInr;
   const forexValue = isUSD ? 1 / usdToInrValue : 1;
 
-  const payslipsData = data?.myPayslips || [];
+  const payslipsData = data?.myPayslips?.myPayslips || [];
+  const aggregateData = data?.myPayslips?.aggregate || {
+    totalEarnings: 0,
+    totalDeductions: 0,
+    totalNetpay: 0,
+  };
 
   const handleUpload = async (file: File) => {
     const parsed = await extractPayslipData(file);
 
     if (!parsed) {
+      showError(
+        "Failed to extract payslip data. Please upload a new set of payslip."
+      );
       console.error("Failed to extract payslip data");
       return;
     }
@@ -87,12 +96,16 @@ const MyEarnings = () => {
     }
   };
 
-  const handleEdit = (id: string) => {
-    console.log("Edit", id);
-  };
-
-  const handleDelete = (id: string) => {
-    console.log("Delete", id);
+  const handleDelete = async (id: string) => {
+    try {
+      await deletePayslip({ variables: { id } });
+      refetch();
+      showSuccess("Payslip deleted successfully!");
+    } catch (err: any) {
+      const message =
+        err?.graphQLErrors?.[0]?.message || "Delete payslip failed.";
+      showError(message);
+    }
   };
 
   return (
@@ -111,9 +124,9 @@ const MyEarnings = () => {
       {payslipsData.length > 0 ? (
         <PayslipTable
           payslips={payslipsData}
-          onEdit={handleEdit}
           onDelete={handleDelete}
           forexValue={forexValue}
+          aggregateData={aggregateData}
         />
       ) : (
         <NoPayslips handleUpload={handleUpload} />

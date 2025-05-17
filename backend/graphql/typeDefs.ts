@@ -89,21 +89,35 @@ export const typeDefs = gql`
     netPay: Float!
   }
 
+  type PayslipAggregate {
+    totalEarnings: Float!
+    totalDeductions: Float!
+    totalNetpay: Float!
+  }
+
+  type MyPayslipsResponse {
+    myPayslips: [Payslip!]!
+    aggregate: PayslipAggregate!
+  }
+
   type Query {
     me: User
     myRsus: [Rsu]
     user(id: ID!): User
     getStockPrice(symbol: String!): StockPrice
     getExchangeRate: ExchangeRate
-    myPayslips: [Payslip!]!
+    myPayslips: MyPayslipsResponse!
   }
 
   type Mutation {
     registerUser(registerInput: RegisterInput): AuthResponse
     loginUser(loginInput: LoginInput): AuthResponse
+
     createRsu(rsuInput: RsuInput): Rsu
     updateRsu(rsuInput: UpdateRsuInput): Rsu
     deleteRsu(id: ID!): Boolean
+
     createPayslip(payslipInput: PayslipInput!): Payslip!
+    deletePayslip(id: ID!): Boolean
   }
 `;

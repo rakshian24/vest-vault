@@ -83,3 +83,9 @@ export const CREATE_PAYSLIP = gql`
     }
   }
 `;
+
+export const DELETE_PAYSLIP = gql`
+  mutation DeletePayslip($id: ID!) {
+    deletePayslip(id: $id)
+  }
+`;
